@@ -1,8 +1,19 @@
 <!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════
+     Safe Stadium — Phishing Awareness Platform
+     Author: Karltel Best-Brown
+     Description: Interactive cybersecurity education platform
+     for stadium fans. Single-page HTML application.
+     Deployed via GitHub Pages (HTTPS)
+     EmailJS used for automatic quiz results delivery
+═══════════════════════════════════════════════════════════ -->
 <html lang="en">
 <head>
+    <!-- Sets character encoding to UTF-8 so special characters display correctly -->
     <meta charset="UTF-8">
+    <!-- Makes the page responsive on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Browser tab title -->
     <title>Stadium Fan Phishing Awareness Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
@@ -10,16 +21,30 @@
             emailjs.init({ publicKey: "dieZNFDPpLczEYnuM" });
         })();
     </script>
+    <!-- ── STYLES: All CSS for the platform. Uses CSS variables defined
+         in :root for consistent theming throughout ── -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ═══ STADIUM THEME OVERRIDES ═══ */
+
+        :root {
+            --navy: #0a1628;
+            --navy-mid: #0f2a4a;
+            --navy-light: #1a3a5c;
+            --green: #00d4aa;
+            --green-dark: #00a884;
+            --amber: #f5a623;
+            --white: #ffffff;
+            --off-white: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-dark: #1a1a2e;
+            --text-mid: #4a5568;
+            --text-light: #718096;
+            --border: #e2e8f0;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0f1f3d;
             min-height: 100vh;
             padding: 20px;
         }
@@ -27,699 +52,492 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
+            background: var(--off-white);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.5);
             overflow: hidden;
         }
 
+        /* ── Header ── */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #0a1628 0%, #0f2a4a 50%, #0a1628 100%);
             color: white;
             padding: 60px 40px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(0,212,170,0.04) 40px,
+                    rgba(0,212,170,0.04) 41px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 40px,
+                    rgba(0,212,170,0.04) 40px,
+                    rgba(0,212,170,0.04) 41px
+                );
+            pointer-events: none;
         }
 
         .header h1 {
-            font-size: 3em;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.8em;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .header h1 span {
+            color: var(--green);
         }
 
         .header p {
-            font-size: 1.2em;
-            opacity: 0.95;
+            font-size: 1.1em;
+            opacity: 0.85;
+            margin-top: 8px;
+            position: relative;
         }
 
+        /* ── Content area ── */
         .content {
-            padding: 60px 40px;
+            padding: 50px 40px;
+            background: var(--off-white);
         }
 
-        .home-view {
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-
+        /* ── Module cards ── */
         .module-card {
-            background: white;
-            border: 3px solid #e0e0e0;
-            border-radius: 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
             padding: 30px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-top: 4px solid var(--green);
         }
 
         .module-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-            border-color: #667eea;
-        }
-
-        .module-card .icon {
-            font-size: 4em;
-            margin-bottom: 15px;
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(0,212,170,0.15);
+            border-top-color: var(--amber);
         }
 
         .module-card h3 {
-            color: #333;
+            color: var(--navy);
+            font-size: 1.3em;
+            font-weight: 700;
             margin-bottom: 10px;
-            font-size: 1.5em;
         }
 
         .module-card p {
-            color: #666;
+            color: var(--text-mid);
             margin-bottom: 20px;
-            line-height: 1.6;
         }
 
+        /* ── Buttons ── */
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            color: var(--navy);
             border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 1em;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 0.95em;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
         .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,212,170,0.35);
         }
 
         .btn-secondary {
-            background: #f0f0f0;
-            color: #667eea;
+            background: var(--off-white);
+            color: var(--navy);
+            border: 2px solid var(--border);
         }
 
         .btn-secondary:hover {
-            background: #e0e0e0;
+            background: var(--border);
+            box-shadow: none;
         }
 
+        /* ── Quiz section on home ── */
         .quiz-section {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
             padding: 40px;
-            border-radius: 15px;
+            border-radius: 16px;
             text-align: center;
             margin-top: 40px;
+            box-shadow: 0 8px 30px rgba(10,22,40,0.2);
         }
 
         .quiz-section h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 2em;
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.8em;
         }
 
-        .module-view {
-            animation: fadeIn 0.5s ease-in;
+        .quiz-section p {
+            color: rgba(255,255,255,0.75);
+            margin-bottom: 25px;
         }
 
+        /* ── Back button ── */
         .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-            cursor: pointer;
-            color: #667eea;
+            color: var(--green);
             font-weight: 600;
-            transition: all 0.3s ease;
         }
 
         .back-btn:hover {
-            gap: 15px;
+            color: var(--green-dark);
         }
 
+        /* ── Module header ── */
         .module-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
             color: white;
-            padding: 40px;
-            border-radius: 15px;
-            margin-bottom: 40px;
+            padding: 35px 40px;
+            border-radius: 16px;
+            margin-bottom: 35px;
             display: flex;
             align-items: center;
             gap: 20px;
+            border-left: 5px solid var(--green);
         }
 
-        .module-header .icon {
-            font-size: 3em;
+        .module-header h1 {
+            font-size: 1.9em;
+            font-weight: 800;
+            margin-bottom: 6px;
         }
 
-        .module-header div h1 {
-            margin-bottom: 10px;
+        .module-header p {
+            opacity: 0.8;
+            font-size: 1em;
         }
 
-        .lesson-content {
-            margin-bottom: 40px;
-        }
-
+        /* ── Lesson boxes ── */
         .lesson-content h2 {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 2.2em;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 15px;
+            color: var(--navy);
+            font-size: 1.7em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--green);
+            padding-bottom: 10px;
+            font-weight: 800;
         }
 
         .lesson-box {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-left: 5px solid #667eea;
-            padding: 25px;
+            background: linear-gradient(135deg, #f0fdf9 0%, #e6f7f4 100%);
+            border-left: 5px solid var(--green);
+            padding: 22px 25px;
             border-radius: 10px;
             margin-bottom: 25px;
             line-height: 1.8;
             font-size: 1.05em;
+            color: var(--text-dark);
         }
 
-        .red-flag-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .flip-card {
-            background-color: transparent;
-            width: 100%;
-            height: 280px;
-            perspective: 1000px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        .flip-card-front {
-            background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%);
-            border: 3px solid #ffcdd2;
-            color: #333;
-        }
-
-        .flip-card-back {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-            color: white;
-            transform: rotateY(180deg);
-        }
-
-        .flip-card:hover .flip-card-front {
-            border-color: #ff6b6b;
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.2);
-        }
-
-        .flip-card-front h4 {
-            color: #c62828;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        .flip-card-front .flip-hint {
-            color: #999;
-            font-size: 0.85em;
-            margin-top: 15px;
-        }
-
-        .flip-card-back h4 {
-            margin-bottom: 15px;
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-
-        .flip-card-back p {
-            font-size: 0.95em;
-            line-height: 1.5;
-            opacity: 0.95;
-        }
-
+        /* ── Red flags ── */
         .red-flag {
             background: white;
-            border: 2px solid #ffebee;
-            border-radius: 10px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
             padding: 20px;
             transition: all 0.3s ease;
         }
 
         .red-flag:hover {
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.2);
-            border-color: #ff6b6b;
+            box-shadow: 0 8px 25px rgba(0,212,170,0.12);
+            border-color: var(--green);
         }
 
-        .red-flag h4 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-
-        .red-flag p {
-            color: #666;
-            margin-bottom: 15px;
-        }
-
+        /* ── Severity badges ── */
         .severity {
             display: inline-block;
-            padding: 5px 15px;
+            padding: 4px 14px;
             border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: bold;
+            font-size: 0.82em;
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
-        .critical {
-            background: #ffebee;
-            color: #c62828;
-        }
+        .critical { background: #fff0f0; color: #c62828; border: 1px solid #ffcdd2; }
+        .high { background: #fff8e1; color: #e65100; border: 1px solid #ffe0b2; }
+        .medium { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
 
-        .high {
-            background: #fff3e0;
-            color: #e65100;
-        }
-
-        .medium {
-            background: #fffde7;
-            color: #f57f17;
-        }
-
+        /* ── Exercise ── */
         .exercise {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border: 2px solid #4caf50;
-            border-radius: 15px;
+            background: linear-gradient(135deg, #f0fdf9 0%, #e6fff9 100%);
+            border: 2px solid var(--green);
+            border-radius: 16px;
             padding: 30px;
             margin: 30px 0;
         }
 
-        .exercise h3 {
-            color: #2e7d32;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-
-        .exercise-email {
-            background: white;
-            border: 2px solid #bdbdbd;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.95em;
-            line-height: 1.8;
-        }
-
-        .exercise-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 30px 0;
-        }
+        .exercise h3 { color: var(--navy); }
 
         .exercise-btn {
-            padding: 20px;
-            border: 3px solid #999;
+            padding: 18px;
+            border: 2px solid var(--border);
             background: white;
-            color: #333;
+            color: var(--text-dark);
             border-radius: 10px;
-            font-weight: bold;
+            font-weight: 700;
             font-size: 1em;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .exercise-btn:hover {
-            transform: scale(1.02);
-        }
+        .exercise-btn:hover { border-color: var(--green); background: #f0fdf9; }
+        .exercise-btn.selected-correct { background: var(--green); color: white; border-color: var(--green-dark); }
+        .exercise-btn.selected-wrong { background: #f44336; color: white; border-color: #c62828; }
 
-        .exercise-btn.selected-correct {
-            background: #4caf50;
-            color: white;
-            border-color: #2e7d32;
-        }
-
-        .exercise-btn.selected-wrong {
-            background: #f44336;
-            color: white;
-            border-color: #c62828;
-        }
-
-        .feedback {
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .feedback.show {
-            display: block;
-            animation: slideIn 0.4s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .feedback-correct {
-            background: #e8f5e9;
-            border: 2px solid #4caf50;
-            color: #2e7d32;
-        }
-
-        .feedback-wrong {
-            background: #ffebee;
-            border: 2px solid #f44336;
-            color: #c62828;
-        }
-
-        .feedback strong {
-            display: block;
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-
+        /* ── Quiz ── */
         .quiz-container {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border-radius: 15px;
+            background: linear-gradient(135deg, #f0fdf9 0%, #e6f7f4 100%);
+            border-radius: 16px;
             padding: 40px;
         }
 
         .quiz-question {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            border: 2px solid #e0e0e0;
+            padding: 28px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            border: 2px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
-        .quiz-question h3 {
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 1.2em;
-        }
+        .quiz-question h3 { color: var(--navy); font-weight: 700; }
 
         .quiz-options {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
         }
 
         .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             background: white;
-            border: 2px solid #e0e0e0;
-            padding: 15px 20px;
+            border: 2px solid var(--border);
+            padding: 14px 18px;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .quiz-option:hover {
-            border-color: #667eea;
-            background: #f5f7fa;
+        .quiz-option input {
+            flex-shrink: 0;
         }
 
-        .quiz-option input[type="radio"] {
-            margin-right: 10px;
+        .quiz-option span {
+            flex: 1;
+            line-height: 1.5;
         }
 
-        .quiz-option.selected {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
+        .quiz-option:hover { border-color: var(--green); background: #f0fdf9; }
+        .quiz-option.selected { border-color: var(--green); background: #e6fff9; }
 
-        .quiz-option input[type="checkbox"] {
-            margin-right: 10px;
-        }
-
-        .quiz-feedback {
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .quiz-feedback.show {
-            display: block;
-        }
-
-        .quiz-feedback-correct {
-            background: #e8f5e9;
-            border-left: 5px solid #4caf50;
-            color: #2e7d32;
-        }
-
-        .quiz-feedback-wrong {
-            background: #ffebee;
-            border-left: 5px solid #f44336;
-            color: #c62828;
-        }
-
-        .quiz-feedback strong {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-
+        /* ── Submit button ── */
         .submit-btn {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            color: var(--navy);
             border: none;
             border-radius: 10px;
             font-size: 1.1em;
-            font-weight: bold;
+            font-weight: 800;
             cursor: pointer;
             margin-top: 30px;
             transition: all 0.3s ease;
+            letter-spacing: 0.3px;
         }
 
         .submit-btn:hover:not(:disabled) {
-            transform: scale(1.02);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,212,170,0.35);
         }
 
-        .submit-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
+        /* ── Results ── */
         .results {
-            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
             color: white;
             padding: 50px;
-            border-radius: 15px;
+            border-radius: 16px;
             text-align: center;
             display: none;
+            border: 3px solid var(--green);
         }
 
-        .results.show {
-            display: block;
-            animation: slideIn 0.5s ease;
-        }
+        .results.show { display: block; animation: slideIn 0.5s ease; }
+        .results h2 { font-size: 2.2em; font-weight: 800; }
+        .score { font-size: 4em; font-weight: 800; color: var(--green); text-shadow: 0 0 30px rgba(0,212,170,0.4); }
 
-        .results h2 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
+        /* ── Tactic accordion ── */
+        .tactic-accordion { border: 2px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .tactic-toggle { background: white; border: none; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; font-size: 1.05em; font-weight: 600; color: var(--navy); cursor: pointer; text-align: left; transition: background 0.2s; }
+        .tactic-toggle:hover { background: #f0fdf9; }
+        .tactic-arrow { font-size: 0.85em; color: var(--green); transition: transform 0.3s ease; }
+        .tactic-body { padding: 20px; background: #fafffe; border-top: 1px solid var(--border); color: var(--text-mid); line-height: 1.75; font-size: 0.98em; }
+        .tactic-example-box { background: white; border-left: 4px solid var(--green); border-radius: 0 8px 8px 0; padding: 14px 16px; margin-top: 14px; font-size: 0.95em; color: var(--text-dark); line-height: 1.7; }
 
-        .score {
-            font-size: 4em;
-            font-weight: bold;
-            margin: 30px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
+        /* ── Red flag accordion ── */
+        .redflag-accordion { border: 2px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .redflag-toggle { background: white; border: none; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; font-size: 1em; cursor: pointer; text-align: left; transition: background 0.2s; }
+        .redflag-toggle:hover { background: #f0fdf9; }
+        .redflag-body { padding: 20px; background: #fafffe; border-top: 1px solid var(--border); color: var(--text-mid); line-height: 1.75; font-size: 0.97em; }
+        .redflag-example { background: white; border-left: 4px solid #ff6b6b; border-radius: 0 8px 8px 0; padding: 14px 16px; margin-top: 14px; font-size: 0.95em; color: var(--text-dark); line-height: 1.8; }
 
-        .results p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            opacity: 0.95;
-        }
+        /* ── Flip cards ── */
+        .flip-card-front { background: linear-gradient(135deg, #f0fdf9 0%, #e6f7f4 100%); border: 2px solid var(--green); }
+        .flip-card-back { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); }
 
-        .tactics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
+        /* ── Feedback boxes ── */
+        .feedback-correct { background: #e6fff9; border: 2px solid var(--green); color: #1b5e20; }
+        .feedback-wrong { background: #ffebee; border: 2px solid #f44336; color: #c62828; }
 
-        .tactic-card {
-            padding: 25px;
-            border-radius: 15px;
-            color: white;
-            transition: all 0.3s ease;
-        }
+        /* ── Gradient helpers ── */
+        .gradient-red { background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%); }
+        .gradient-orange { background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%); }
+        .gradient-green { background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%); }
+        .gradient-purple { background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy) 100%); }
+        .gradient-blue { background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%); }
+        .gradient-cyan { background: linear-gradient(135deg, #26c6da 0%, #00acc1 100%); }
 
-        .tactic-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .tactic-card h4 {
-            font-size: 1.3em;
-            margin-bottom: 15px;
-        }
-
-        .tactic-card p {
-            margin-bottom: 15px;
-            opacity: 0.95;
-        }
-
-        .tactic-example {
-            background: rgba(0,0,0,0.2);
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 0.95em;
-            border-left: 3px solid white;
-        }
-
-        .gradient-red {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
-        }
-
-        .gradient-orange {
-            background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
-        }
-
-        .gradient-green {
-            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
-        }
-
-        .gradient-purple {
-            background: linear-gradient(135deg, #ab47bc 0%, #8e24aa 100%);
-        }
-
-        .safety-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .safety-card {
-            padding: 25px;
-            border-radius: 15px;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .safety-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .safety-card h4 {
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .safety-card ul {
-            list-style: none;
-        }
-
-        .safety-card li {
-            margin-bottom: 10px;
-            opacity: 0.95;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .safety-card li:before {
-            content: "✓";
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .gradient-blue {
-            background: linear-gradient(135deg, #42a5f5 0%, #2196f3 100%);
-        }
-
-        .gradient-cyan {
-            background: linear-gradient(135deg, #29b6f6 0%, #0097a7 100%);
-        }
+        /* ── Email form ── */
+        .email-form input:focus { border-color: var(--green); outline: none; }
 
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2em;
-            }
-
-            .content {
-                padding: 30px 20px;
-            }
-
-            .module-header {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .exercise-options {
-                grid-template-columns: 1fr;
-            }
-
-            .modules-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header {
-                padding: 40px 20px;
-            }
+            .header h1 { font-size: 1.9em; }
+            .content { padding: 30px 20px; }
+            .module-header { flex-direction: column; text-align: center; }
+            .exercise-options { grid-template-columns: 1fr; }
+            .modules-grid { grid-template-columns: 1fr; }
+            .header { padding: 40px 20px; }
         }
+
+
+        /* ── Story Steps ── */
+        .story-step {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            border: 2px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .story-step-end {
+            border-color: #f44336;
+        }
+
+        .story-number {
+            background: var(--green);
+            color: var(--navy);
+            font-weight: 800;
+            font-size: 1.1em;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .story-content {
+            flex: 1;
+        }
+
+        .story-message {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 15px 18px;
+            margin-bottom: 14px;
+            border-left: 4px solid var(--navy-mid);
+            font-size: 0.97em;
+            line-height: 1.7;
+            color: var(--text-dark);
+        }
+
+        .story-sender {
+            display: block;
+            font-size: 0.82em;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .story-tactic {
+            background: linear-gradient(135deg, #fff8e6 0%, #fff3d4 100%);
+            border-left: 4px solid var(--amber);
+            border-radius: 0 8px 8px 0;
+            padding: 12px 16px;
+            font-size: 0.93em;
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        .story-tactic-label {
+            font-weight: 700;
+            color: #8a6000;
+        }
+
+        .story-connector {
+            width: 3px;
+            height: 25px;
+            background: var(--green);
+            margin-left: 40px;
+            opacity: 0.5;
+        }
+
     </style>
 </head>
 <body>
+    <!-- ── MAIN CONTAINER: wraps the entire platform ── -->
     <div class="container">
+        <!-- ── SITE HEADER: displayed on every page ── -->
+        <!-- ── SITE HEADER ──
+         Always visible at the top of every page.
+         Contains the platform title and subtitle. ──>
         <div class="header">
-            <h1>🛡️ Stadium Fan Phishing Awareness</h1>
+            <h1>🛡️ Stadium Fan <span>Phishing Awareness</span></h1>
             <p>Learn how to protect yourself from phishing scams while enjoying the game</p>
         </div>
 
         <div class="content" id="mainContent">
             <!-- Home View -->
             <div id="homeView" class="home-view">
+                <!-- ── MODULE CARDS GRID ──
+                     Each card calls loadModule() with its module ID
+                     when clicked, replacing the content area with that module. ──>
                 <div class="modules-grid">
                     <div class="module-card" onclick="loadModule('understanding-phishing')">
                         <div class="icon">🎣</div>
@@ -750,10 +568,13 @@
                     </div>
                 </div>
 
+                <!-- ── QUIZ CALL-TO-ACTION ──
+                     Shown at the bottom of the homepage.
+                     Navigates to the quiz module when clicked. ──>
                 <div class="quiz-section">
                     <h2>Ready to Test Your Knowledge?</h2>
                     <p style="color: #666; margin-bottom: 25px; font-size: 1.1em;">Take the interactive quiz to check what you've learned</p>
-                    <button class="btn" onclick="loadModule('test-knowledge')" style="font-size: 1.1em; padding: 15px 40px;">Take the Quiz →</button>
+                    <button class="btn" onclick="loadModule('test-knowledge')" style="font-size: 1.1em; padding: 15px 40px; background: var(--amber); color: var(--navy);">Take the Quiz →</button>
                 </div>
             </div>
 
@@ -765,7 +586,35 @@
         </div>
     </div>
 
+    <!-- ── JAVASCRIPT: All platform logic ──
+     Key functions:
+     - loadModule(id): renders the correct module/page into #main-content
+     - answerExercise(): handles interactive exercise submissions
+     - toggleTactic() / toggleRedFlag(): accordion expand/collapse
+     - submitQuiz(): scores and displays quiz results
+     - sendResultsEmail(): sends results via EmailJS
+     - answerSafety(): handles Module 4 scenario exercise
+     - selectTactic() / checkTactics(): Module 3 tactic exercises
+── -->
     <script>
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: loadModule(moduleId)
+        // PURPOSE:  The main navigation function of the platform.
+        //           Called every time a user clicks a module card,
+        //           a back button, or any navigation link.
+        // HOW IT WORKS:
+        //   1. Gets the homeView and moduleView divs from the DOM
+        //   2. Hides homeView and shows moduleView (or vice versa
+        //      when returning home)
+        //   3. Looks up the moduleId in the 'modules' object
+        //   4. Injects the matching HTML into #moduleContent
+        //   5. If module is 'test-knowledge', runs quiz setup
+        //   6. Scrolls back to the top of the page
+        // PARAMETERS:
+        //   moduleId (string) — e.g. 'home', 'understanding-phishing',
+        //   'spot-the-signs', 'social-engineering',
+        //   'staying-safe', 'test-knowledge'
+        // ════════════════════════════════════════════════════════════
         function loadModule(moduleId) {
             const homeView = document.getElementById('homeView');
             const moduleView = document.getElementById('moduleView');
@@ -780,7 +629,17 @@
             homeView.style.display = 'none';
             moduleView.style.display = 'block';
 
-            const modules = {
+            // ════════════════════════════════════════════════════════════
+// OBJECT: modules
+// PURPOSE: Stores all page content as HTML template strings.
+//          Each key is a moduleId string, each value is the
+//          full HTML for that page.
+//          loadModule() uses this object to inject content
+//          into #main-content when the user navigates.
+// NOTE:    This is a single-page application (SPA) — there
+//          are no separate HTML files. All content lives here.
+// ════════════════════════════════════════════════════════════
+const modules = {
                 'understanding-phishing': `
                     <div class="module-header">
                         <div class="icon">🎣</div>
@@ -793,58 +652,138 @@
                     <div class="lesson-content">
                         <h2>What is Phishing?</h2>
                         <div class="lesson-box">
-                            <strong>Definition:</strong> Phishing is a cyber attack where criminals impersonate legitimate organisations to trick users into revealing sensitive information like passwords, credit card numbers, or personal data. Think of it as digital deception.
+                            <strong>Definition:</strong> Phishing is a cyber attack where criminals impersonate legitimate organisations to trick users into revealing sensitive information like passwords, credit card numbers, or personal data. Think of it as digital deception — the attacker doesn't hack your computer, they hack <em>you</em>.
                         </div>
+                    </div>
 
-                        <div class="red-flag-grid">
-                            <div class="red-flag">
-                                <h4>Common Tactics</h4>
-                                <p>
-                                    • Fake login pages<br>
-                                    • Urgent payment requests<br>
-                                    • Account verification scams<br>
-                                    • Prize or reward offers<br>
-                                    • Suspicious email attachments
-                                </p>
+                    <div class="lesson-content">
+                        <h2>Common Tactics — and Why They Work</h2>
+                        <p style="color: #666; margin-bottom: 25px; font-size: 1.05em;">Click each tactic to understand how it works and why people fall for it.</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('t1')">
+                                    <span>🖥️ Fake Login Pages</span><span class="tactic-arrow" id="arrow-t1">▼</span>
+                                </button>
+                                <div class="tactic-body" id="t1" style="display:none;">
+                                    <p>Criminals build websites that look <strong>identical</strong> to real ticketing sites — same logo, same colours, same layout. When you type in your username and password, you think you're logging into your account. You're not. You're handing your details directly to the attacker.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>Real example:</strong> You Google "Manchester United tickets" and click a sponsored link. The site looks perfect. You log in. Within hours, someone else is using your account to buy tickets with your saved payment details.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="red-flag">
-                                <h4>Why Stadium Fans?</h4>
-                                <p>
-                                    • High ticket prices = bigger rewards<br>
-                                    • Time pressure (sold-out events)<br>
-                                    • Emotional attachment to teams<br>
-                                    • Multiple payment methods<br>
-                                    • Merchandise opportunities
-                                </p>
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('t2')">
+                                    <span>⏰ Urgent Payment Requests</span><span class="tactic-arrow" id="arrow-t2">▼</span>
+                                </button>
+                                <div class="tactic-body" id="t2" style="display:none;">
+                                    <p>Attackers send messages claiming your payment has failed, your ticket is about to be cancelled, or you must pay within the next hour. This <strong>time pressure stops you thinking clearly</strong>. When we panic, we skip the checks we'd normally do.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>Real example:</strong> "⚠️ Your Champions League ticket payment failed. Pay now or your seat will be released." The link goes to a fake payment page that steals your card number.
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('t3')">
+                                    <span>🔐 Account Verification Scams</span><span class="tactic-arrow" id="arrow-t3">▼</span>
+                                </button>
+                                <div class="tactic-body" id="t3" style="display:none;">
+                                    <p>These emails claim there's been "suspicious activity" on your account and ask you to verify your identity immediately. They look official because they copy real logos and branding. <strong>Legitimate companies never ask for your password via email</strong> — this is always a scam.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>Real example:</strong> "Dear Customer, we've detected unusual sign-in activity. Verify your account within 24 hours to avoid suspension." The link goes to a fake login page.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('t4')">
+                                    <span>🎁 Prize or Reward Offers</span><span class="tactic-arrow" id="arrow-t4">▼</span>
+                                </button>
+                                <div class="tactic-body" id="t4" style="display:none;">
+                                    <p>Who doesn't want free tickets or merchandise? Scammers send messages congratulating you on "winning" something to get you excited and lower your guard. <strong>The catch is always collecting the prize</strong> — which involves giving away personal or payment details.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>Real example:</strong> "🏆 Congratulations! You've been selected for 2 free VIP tickets to the derby. Click here to claim within 48 hours." Clicking takes you to a page asking for your card details to "cover shipping."
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('t5')">
+                                    <span>📎 Suspicious Email Attachments</span><span class="tactic-arrow" id="arrow-t5">▼</span>
+                                </button>
+                                <div class="tactic-body" id="t5" style="display:none;">
+                                    <p>Attachments disguised as tickets, receipts, or invoices can contain <strong>malware</strong> — software that secretly installs itself on your device and steals information in the background. You might not notice anything for weeks while the attacker monitors your activity.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>Real example:</strong> "Please find your e-ticket attached." The attachment is a .zip or .exe file. Opening it installs a keylogger that records everything you type, including passwords and card numbers.
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="lesson-content">
+                        <h2>Why Are Stadium Fans Targeted?</h2>
+                        <p style="color: #666; margin-bottom: 25px; font-size: 1.05em;">Criminals don't target people randomly. Stadium fans are a deliberate choice. Here's why:</p>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+
+                            <div style="background: white; border-left: 5px solid #ff6b6b; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                <h4 style="color: #c62828; margin-bottom: 10px;">💰 High Ticket Prices</h4>
+                                <p style="color: #555; line-height: 1.7;">Premier League and Champions League tickets can cost hundreds of pounds. This means attackers can steal large sums in a single transaction. A £300 ticket scam is far more profitable than stealing a £5 item.</p>
+                            </div>
+
+                            <div style="background: white; border-left: 5px solid #ffa000; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                <h4 style="color: #e65100; margin-bottom: 10px;">⏱️ Time Pressure</h4>
+                                <p style="color: #555; line-height: 1.7;">When a match is sold out and tickets are scarce, fans act fast. That urgency is exactly what attackers want — because a fan rushing to secure a ticket is far less likely to stop and question whether a site is genuine.</p>
+                            </div>
+
+                            <div style="background: white; border-left: 5px solid #e91e63; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                <h4 style="color: #880e4f; margin-bottom: 10px;">❤️ Emotional Attachment</h4>
+                                <p style="color: #555; line-height: 1.7;">Supporting a football club is deeply personal. Attackers exploit this — a message claiming to be from your club feels trustworthy. Emotional investment can cloud judgement, making fans more likely to act without fully verifying.</p>
+                            </div>
+
+                            <div style="background: white; border-left: 5px solid #00d4aa; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                <h4 style="color: #1b5e20; margin-bottom: 10px;">💳 Multiple Payment Methods</h4>
+                                <p style="color: #555; line-height: 1.7;">Fans regularly purchase tickets, merchandise, food, and hospitality packages online. This means they're used to entering payment details in event-related contexts, making a fraudulent payment request seem more normal.</p>
+                            </div>
+
+                            <div style="background: white; border-left: 5px solid #2196f3; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                                <h4 style="color: #0d47a1; margin-bottom: 10px;">📱 Merchandise Opportunities</h4>
+                                <p style="color: #555; line-height: 1.7;">Club kits, scarves, and limited-edition items create constant purchase opportunities throughout the season. Attackers set up fake merchandise stores that look completely legitimate, collecting payment for items that never arrive.</p>
+                            </div>
+
                         </div>
                     </div>
 
                     <div class="lesson-content">
                         <h2>How Phishing Works</h2>
                         <div style="position: relative; padding-left: 30px; margin: 30px 0;">
-                            <div style="position: absolute; left: 0; top: 0; width: 3px; height: 100%; background: linear-gradient(180deg, #667eea, #764ba2);"></div>
+                            <div style="position: absolute; left: 0; top: 0; width: 3px; height: 100%; background: linear-gradient(180deg, var(--green), var(--navy));"></div>
                             
                             <div style="margin-bottom: 35px; padding-left: 30px;">
-                                <div style="position: absolute; left: -20px; width: 40px; height: 40px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">1</div>
+                                <div style="position: absolute; left: -20px; width: 40px; height: 40px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">1</div>
                                 <h4 style="color: #333; margin-bottom: 8px;">🎣 The Hook</h4>
                                 <p style="color: #666;">Criminal sends a convincing email pretending to be your team or ticket vendor</p>
                             </div>
 
                             <div style="margin-bottom: 35px; padding-left: 30px;">
-                                <div style="position: absolute; left: -20px; width: 40px; height: 40px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">2</div>
+                                <div style="position: absolute; left: -20px; width: 40px; height: 40px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">2</div>
                                 <h4 style="color: #333; margin-bottom: 8px;">🪝 The Lure</h4>
                                 <p style="color: #666;">Message creates urgency: "Verify your account" or "Limited time offer"</p>
                             </div>
 
                             <div style="margin-bottom: 35px; padding-left: 30px;">
-                                <div style="position: absolute; left: -20px; width: 40px; height: 40px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">3</div>
+                                <div style="position: absolute; left: -20px; width: 40px; height: 40px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">3</div>
                                 <h4 style="color: #333; margin-bottom: 8px;">⚡ The Bite</h4>
                                 <p style="color: #666;">You click a link that looks real but leads to a fake website</p>
                             </div>
 
                             <div style="padding-left: 30px;">
-                                <div style="position: absolute; left: -20px; width: 40px; height: 40px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">4</div>
+                                <div style="position: absolute; left: -20px; width: 40px; height: 40px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">4</div>
                                 <h4 style="color: #333; margin-bottom: 8px;">❌ The Catch</h4>
                                 <p style="color: #666;">You enter your password or payment info - now it's in the attacker's hands</p>
                             </div>
@@ -862,59 +801,157 @@
 
                     <div class="lesson-content">
                         <h2>Email Red Flags</h2>
-                        <p style="color: #666; margin-bottom: 25px; font-size: 1.05em;">Learn to spot these warning signs in suspicious emails:</p>
+                        <p style="color: #666; margin-bottom: 10px; font-size: 1.05em;">Every phishing email leaves clues. The problem is that most people don't know what to look for. Below are the seven most common warning signs — click each one to understand <strong>why</strong> it's a red flag and see a real example of what it looks like.</p>
+                        <p style="color: #888; margin-bottom: 25px; font-size: 0.95em; font-style: italic;">💡 Click any red flag card to expand it</p>
 
-                        <div class="red-flag-grid">
-                            <div class="red-flag">
-                                <h4>Generic Greeting</h4>
-                                <p>"Dear Customer" instead of your name</p>
-                                <span class="severity medium">Medium Risk</span>
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px;">
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('rf1')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span class="severity medium" style="min-width:110px;">Medium Risk</span>
+                                        <span style="font-weight:600; color:#333;">Generic Greeting</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-rf1">▼</span>
+                                </button>
+                                <div class="redflag-body" id="rf1" style="display:none;">
+                                    <p><strong>Why is this a red flag?</strong> Legitimate organisations like your ticket provider or bank already know your name. If they're emailing you, they'll use it. A generic greeting like "Dear Customer" or "Dear Fan" suggests the email was sent in bulk to thousands of people — a classic sign of a phishing campaign.</p>
+                                    <p style="margin-top:12px;"><strong>Why Medium Risk?</strong> On its own, a generic greeting isn't proof of a scam — some legitimate newsletters use them too. But combined with other red flags, it becomes a strong indicator.</p>
+                                    <div class="redflag-example">
+                                        <strong>🚨 Phishing example:</strong> "Dear Customer, your account requires immediate attention."<br>
+                                        <strong>✅ Legitimate example:</strong> "Hi Sarah, your tickets for the Arsenal vs Chelsea match are confirmed."
+                                    </div>
+                                </div>
                             </div>
-                            <div class="red-flag">
-                                <h4>Suspicious Sender</h4>
-                                <p>Email address doesn't match official domain</p>
-                                <span class="severity high">High Risk</span>
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('rf2')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span class="severity high" style="min-width:110px;">High Risk</span>
+                                        <span style="font-weight:600; color:#333;">Suspicious Sender Address</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-rf2">▼</span>
+                                </button>
+                                <div class="redflag-body" id="rf2" style="display:none;">
+                                    <p><strong>Why is this a red flag?</strong> Attackers can make an email <em>look</em> like it comes from a real organisation, but the actual sending address tells the truth. Always check the full email address, not just the display name. Scammers often use addresses that look almost right but contain small differences.</p>
+                                    <p style="margin-top:12px;"><strong>Why High Risk?</strong> A mismatched sender address is one of the clearest indicators of phishing. Legitimate companies send emails from their own verified domains consistently.</p>
+                                    <div class="redflag-example">
+                                        <strong>🚨 Phishing example:</strong> Display name says "Manchester United" but address is: <span style="font-family:monospace; background:#ffebee; padding:2px 6px; border-radius:4px;">support@man-utd-tickets.co.uk</span><br>
+                                        <strong>✅ Legitimate example:</strong> <span style="font-family:monospace; background:#e8f5e9; padding:2px 6px; border-radius:4px;">tickets@manutd.com</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="red-flag">
-                                <h4>Urgent Language</h4>
-                                <p>"Act now!" "Verify immediately!" with short deadlines</p>
-                                <span class="severity high">High Risk</span>
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('rf3')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span class="severity high" style="min-width:110px;">High Risk</span>
+                                        <span style="font-weight:600; color:#333;">Urgent or Threatening Language</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-rf3">▼</span>
+                                </button>
+                                <div class="redflag-body" id="rf3" style="display:none;">
+                                    <p><strong>Why is this a red flag?</strong> Urgency is a psychological weapon. When we feel panicked or rushed, we stop thinking critically and start reacting. Attackers know this and deliberately create artificial deadlines and threats to pressure you into acting before you've had a chance to think.</p>
+                                    <p style="margin-top:12px;"><strong>Why High Risk?</strong> Real companies don't threaten to close your account or cancel your tickets unless you act immediately. If a message is making you feel panicked, that feeling itself is a warning sign.</p>
+                                    <div class="redflag-example">
+                                        <strong>🚨 Phishing example:</strong> "⚠️ URGENT: Your account will be permanently suspended in 2 hours. Click here NOW to prevent this."<br>
+                                        <strong>✅ Legitimate example:</strong> "Your membership renewal is coming up. Please log in at your convenience to review your options."
+                                    </div>
+                                </div>
                             </div>
-                            <div class="red-flag">
-                                <h4>Requests for Info</h4>
-                                <p>Never ask for passwords or credit card details via email</p>
-                                <span class="severity critical">Critical Risk</span>
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('rf4')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span class="severity critical" style="min-width:110px;">Critical Risk</span>
+                                        <span style="font-weight:600; color:#333;">Requests for Sensitive Information</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-rf4">▼</span>
+                                </button>
+                                <div class="redflag-body" id="rf4" style="display:none;">
+                                    <p><strong>Why is this a red flag?</strong> No legitimate organisation — not your bank, not your ticket provider, not your club — will ever ask you to send your password, PIN, or full card details via email. This is an absolute rule with no exceptions. If an email asks for this, it is a scam, full stop.</p>
+                                    <p style="margin-top:12px;"><strong>Why Critical Risk?</strong> Handing over this information gives an attacker immediate access to your accounts and finances. The damage can be instant and severe.</p>
+                                    <div class="redflag-example">
+                                        <strong>🚨 Phishing example:</strong> "To verify your identity, please reply with your password and the last 4 digits of your card."<br>
+                                        <strong>✅ What real companies do:</strong> Ask you to log in to <em>their</em> website directly, never via an email link.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="red-flag">
-                                <h4>Spelling Errors</h4>
-                                <p>Professional organisations proofread carefully</p>
-                                <span class="severity medium">Medium Risk</span>
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('rf5')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span class="severity medium" style="min-width:110px;">Medium Risk</span>
+                                        <span style="font-weight:600; color:#333;">Spelling and Grammar Errors</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-rf5">▼</span>
+                                </button>
+                                <div class="redflag-body" id="rf5" style="display:none;">
+                                    <p><strong>Why is this a red flag?</strong> Professional organisations have teams that proofread communications before they're sent. Phishing emails are often created quickly, sometimes translated from another language, and rarely reviewed — leading to awkward phrasing, spelling mistakes, and odd formatting.</p>
+                                    <p style="margin-top:12px;"><strong>Why Medium Risk?</strong> Modern phishing attacks are increasingly well-written, so the absence of spelling errors doesn't mean an email is safe. But when errors appear alongside other red flags, it significantly increases the likelihood of a scam.</p>
+                                    <div class="redflag-example">
+                                        <strong>🚨 Phishing example:</strong> "Dere Custommer, you're acount have been flag for suspicous activty."<br>
+                                        <strong>Note:</strong> Newer, AI-written phishing emails may be grammatically perfect — always check other red flags too.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="red-flag">
-                                <h4>Suspicious Links</h4>
-                                <p>Hover over links - does the URL match what's shown?</p>
-                                <span class="severity critical">Critical Risk</span>
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('rf6')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span class="severity critical" style="min-width:110px;">Critical Risk</span>
+                                        <span style="font-weight:600; color:#333;">Suspicious or Mismatched Links</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-rf6">▼</span>
+                                </button>
+                                <div class="redflag-body" id="rf6" style="display:none;">
+                                    <p><strong>Why is this a red flag?</strong> A link can display any text but take you somewhere completely different. Attackers use this to make links look legitimate while redirecting you to a fake site. On a computer, hovering over a link (without clicking) shows the real destination in the bottom of your browser. On a phone, press and hold the link to preview it.</p>
+                                    <p style="margin-top:12px;"><strong>Why Critical Risk?</strong> Clicking a malicious link can take you to a credential-stealing site or automatically download malware — even if you don't type anything in.</p>
+                                    <div class="redflag-example">
+                                        <strong>🚨 Phishing example:</strong> Link says <span style="color:#0066cc;">www.ticketmaster.co.uk</span> but actually goes to <span style="font-family:monospace; background:#ffebee; padding:2px 6px; border-radius:4px;">ticketm4ster-secure.ru/login</span><br>
+                                        <strong>✅ Safe habit:</strong> Always type the real website address yourself rather than clicking email links.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="red-flag">
-                                <h4>Unexpected Attachments</h4>
-                                <p>Files you didn't request, especially .exe or .zip</p>
-                                <span class="severity critical">Critical Risk</span>
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('rf7')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span class="severity critical" style="min-width:110px;">Critical Risk</span>
+                                        <span style="font-weight:600; color:#333;">Unexpected Attachments</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-rf7">▼</span>
+                                </button>
+                                <div class="redflag-body" id="rf7" style="display:none;">
+                                    <p><strong>Why is this a red flag?</strong> Attachments in unexpected emails can contain malware — malicious software that installs itself silently on your device when opened. Common disguises include fake e-tickets, invoices, or order confirmations. File types like .exe, .zip, .docm, and .xlsm are especially dangerous.</p>
+                                    <p style="margin-top:12px;"><strong>Why Critical Risk?</strong> Opening a malicious attachment can give an attacker full access to your device, allowing them to steal saved passwords, banking details, and personal files — all without you knowing.</p>
+                                    <div class="redflag-example">
+                                        <strong>🚨 Phishing example:</strong> "Please find your match ticket attached." — Attachment is named "Ticket_2024.exe" or "Invoice.zip"<br>
+                                        <strong>✅ Safe habit:</strong> Legitimate e-tickets are usually links to your account or PDFs sent through official club apps — never executable files.
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
 
                     <div class="exercise">
                         <h3>🎯 Interactive Exercise: Spot the Phishing Email</h3>
-                        <p style="color: #2e7d32; margin-bottom: 20px;">Look at this email. Is it legitimate or phishing? Click your answer below.</p>
+                        <p style="color: #2e7d32; margin-bottom: 5px;">Now that you know the red flags, put your knowledge to the test.</p>
+                        <p style="color: #555; margin-bottom: 20px; font-size: 0.95em;">Read this email carefully. Use what you've just learned — check the sender, the language, the greeting, and what it's asking for. Then decide: is it phishing or legitimate?</p>
                         
                         <div class="exercise-email">
-                            <strong>From:</strong> support@ticketsaleuk.com<br>
+                            <strong>From:</strong> support@manchesterunited-tickets.net<br>
                             <strong>To:</strong> fan@email.com<br>
                             <strong>Subject:</strong> URGENT: Verify Your Account Now!<br><br>
                             Dear Customer,<br><br>
-                            Your account has been flagged for suspicious activity. Click here immediately to verify your details and avoid account suspension.<br><br>
-                            <span style="color: #0066cc;">Click here to verify</span><br><br>
+                            Your account has been flagged for suspicious activity. Click here immediately to verify your details and avoid permanent account suspension within 24 hours.<br><br>
+                            <span style="color: #0066cc; text-decoration: underline; cursor: pointer;">Click here to verify → secure-manutd-login.co.uk</span><br><br>
                             Manchester United Ticketing System
+                        </div>
+
+                        <div style="background: #e6fff9; border: 1px solid #00d4aa; border-radius: 10px; padding: 15px; margin: 15px 0; font-size: 0.95em; color: #1a3a5c;">
+                            💡 <strong>Hint:</strong> Think about the red flags you just learned. Check the sender address, the greeting, the language used, what it's asking you to do, and where the link goes.
                         </div>
 
                         <div class="exercise-options">
@@ -945,249 +982,540 @@
                         <div class="icon">🎭</div>
                         <div>
                             <h1>Social Engineering</h1>
-                            <p>Understand the psychological tactics attackers use to manipulate you</p>
+                            <p>Understand how attackers manipulate your emotions to steal your money and data</p>
                         </div>
                     </div>
 
                     <div class="lesson-content">
-                        <h2>Influence & Manipulation Tactics</h2>
-                        <p style="color: #666; margin-bottom: 25px; font-size: 1.05em;">Phishers use psychology to manipulate you. Understanding these tactics helps you defend yourself.</p>
-                        <p style="color: #666; margin-bottom: 30px; font-style: italic;">💡 Click on each card to flip it and see how attackers use these tactics:</p>
-
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #ffe0e0 0%, #ffcccc 100%); border: 3px solid #ff5252;">
-                                        <h4 style="color: #c62828;">🏛️ Authority</h4>
-                                        <p style="font-size: 1.2em;">Fake Official</p>
-                                        <div class="flip-hint">Click to see the attack</div>
-                                    </div>
-                                    <div class="flip-card-back gradient-red">
-                                        <h4>The Authority Trick</h4>
-                                        <p>Attackers pretend to be official organisations</p>
-                                        <p style="margin-top: 15px; text-align: left; font-size: 0.95em;"><strong>Example:</strong> "From: official@manchesterunited.co.uk" (fake domain)<br>Subject: "Verify Your Account - Official"</p>
-                                        <p style="margin-top: 15px; font-size: 0.9em;">💡 Defence: Always verify independently!</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border: 3px solid #ff9800;">
-                                        <h4 style="color: #e65100;">⏰ Scarcity</h4>
-                                        <p style="font-size: 1.2em;">Limited Time!</p>
-                                        <div class="flip-hint">Click to see the attack</div>
-                                    </div>
-                                    <div class="flip-card-back" style="background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);">
-                                        <h4>The Scarcity Trick</h4>
-                                        <p>Attackers claim things are running out</p>
-                                        <p style="margin-top: 15px; text-align: left; font-size: 0.95em;"><strong>Example:</strong> "Only 2 VIP tickets left!"<br>"Exclusive offer expires TODAY!"<br>"Act now or miss out!"</p>
-                                        <p style="margin-top: 15px; font-size: 0.9em;">💡 Defence: Take time to verify before buying!</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); border: 3px solid #f44336;">
-                                        <h4 style="color: #c62828;">⚡ Urgency</h4>
-                                        <p style="font-size: 1.2em;">ACT NOW!</p>
-                                        <div class="flip-hint">Click to see the attack</div>
-                                    </div>
-                                    <div class="flip-card-back gradient-red">
-                                        <h4>The Urgency Trick</h4>
-                                        <p>Attackers pressure you to act immediately</p>
-                                        <p style="margin-top: 15px; text-align: left; font-size: 0.95em;"><strong>Example:</strong> "Your account will be suspended!"<br>"Verify immediately or lose access!"<br>"DO THIS NOW!"</p>
-                                        <p style="margin-top: 15px; font-size: 0.9em;">💡 Defence: Real companies don't rush you like this!</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border: 3px solid #4caf50;">
-                                        <h4 style="color: #2e7d32;">❤️ Liking</h4>
-                                        <p style="font-size: 1.2em;">Building Trust</p>
-                                        <div class="flip-hint">Click to see the attack</div>
-                                    </div>
-                                    <div class="flip-card-back gradient-green">
-                                        <h4>The Liking Trick</h4>
-                                        <p>Attackers build false trust by being friendly</p>
-                                        <p style="margin-top: 15px; text-align: left; font-size: 0.95em;"><strong>Example:</strong> "Hi [Your Name]!"<br>"Thank you for being a loyal fan!"<br>"We value you as a customer"</p>
-                                        <p style="margin-top: 15px; font-size: 0.9em;">💡 Defence: Real organisations are friendly, BUT still verify!</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <h2>What is Social Engineering?</h2>
+                        <div class="lesson-box">
+                            <strong>Social engineering</strong> is when an attacker manipulates you psychologically rather than hacking your device. Instead of breaking through technical security, they exploit human emotions — excitement, fear, trust, and urgency — to get you to hand over information or money willingly. In the world of ticket scams, this is the attacker's most powerful weapon.
                         </div>
                     </div>
 
                     <div class="lesson-content">
-                        <h2>Your Defence: Critical Thinking</h2>
-                        <div style="background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%); border-left: 5px solid #4caf50; padding: 30px; border-radius: 10px;">
-                            <h3 style="color: #2e7d32; margin-bottom: 25px;">4-Step Defence Strategy</h3>
-                            <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
-                                <div style="display: flex; gap: 15px; align-items: flex-start;">
-                                    <div style="background: #2e7d32; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">1</div>
-                                    <div>
-                                        <strong style="color: #2e7d32; font-size: 1.1em;">STOP</strong> - Don't react emotionally to urgent messages
+                        <h2>The Matchday Scam — A Real Story</h2>
+                        <p style="color: var(--text-mid); margin-bottom: 20px; font-size: 1.05em;">Follow this story step by step. At each stage, a social engineering tactic is used against the fan. See if you can spot them.</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 0; margin-bottom: 30px;">
+
+                            <div class="story-step">
+                                <div class="story-number">1</div>
+                                <div class="story-content">
+                                    <div class="story-message">
+                                        <span class="story-sender">Unknown Number via WhatsApp</span>
+                                        <p>"Hey mate! I saw your comment on the United forum — you're looking for tickets for Saturday? I've got 2 spares, face value £85 each. I'm a season ticket holder, been going for 15 years. Good seats too, Row F behind the goal."</p>
+                                    </div>
+                                    <div class="story-tactic">
+                                        <span class="story-tactic-label">🎭 Tactic used:</span> <strong>Liking &amp; Trust Building</strong> — The attacker immediately tries to seem relatable. Mentioning the forum makes it feel personal. Claiming to be a long-term season ticket holder builds credibility. You feel like you're dealing with a fellow fan, not a criminal.
                                     </div>
                                 </div>
-                                <div style="display: flex; gap: 15px; align-items: flex-start;">
-                                    <div style="background: #2e7d32; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">2</div>
-                                    <div>
-                                        <strong style="color: #2e7d32; font-size: 1.1em;">VERIFY</strong> - Does this match what you know to be true?
+                            </div>
+
+                            <div class="story-connector"></div>
+
+                            <div class="story-step">
+                                <div class="story-number">2</div>
+                                <div class="story-content">
+                                    <div class="story-message">
+                                        <span class="story-sender">Unknown Number via WhatsApp</span>
+                                        <p>"Just so you know, I've already had 3 people message me about these. My mate wants them too but I said I'd give you first refusal since you posted first. If you want them, I need to know in the next hour."</p>
+                                    </div>
+                                    <div class="story-tactic">
+                                        <span class="story-tactic-label">🎭 Tactic used:</span> <strong>Scarcity &amp; Urgency</strong> — Suddenly there's competition and a deadline. This is completely manufactured. The pressure makes you feel like you'll miss out if you don't act immediately — stopping you from taking time to verify whether this person is genuine.
                                     </div>
                                 </div>
-                                <div style="display: flex; gap: 15px; align-items: flex-start;">
-                                    <div style="background: #2e7d32; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">3</div>
-                                    <div>
-                                        <strong style="color: #2e7d32; font-size: 1.1em;">CONTACT</strong> - Call the organisation directly using a number you know is correct
+                            </div>
+
+                            <div class="story-connector"></div>
+
+                            <div class="story-step">
+                                <div class="story-number">3</div>
+                                <div class="story-content">
+                                    <div class="story-message">
+                                        <span class="story-sender">Unknown Number via WhatsApp</span>
+                                        <p>"I work in security at Old Trafford so I can also get you into the hospitality area beforehand. I can send you the official confirmation email from the club once payment is made."</p>
+                                    </div>
+                                    <div class="story-tactic">
+                                        <span class="story-tactic-label">🎭 Tactic used:</span> <strong>Authority</strong> — Claiming to work at the stadium gives the impression of an inside connection and official legitimacy. The promise of a "confirmation email from the club" sounds reassuring — but it will never arrive, or it will be a fake.
                                     </div>
                                 </div>
-                                <div style="display: flex; gap: 15px; align-items: flex-start;">
-                                    <div style="background: #2e7d32; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">4</div>
-                                    <div>
-                                        <strong style="color: #2e7d32; font-size: 1.1em;">REPORT</strong> - Forward suspicious emails to the real organisation's security team
+                            </div>
+
+                            <div class="story-connector"></div>
+
+                            <div class="story-step">
+                                <div class="story-number">4</div>
+                                <div class="story-content">
+                                    <div class="story-message">
+                                        <span class="story-sender">Unknown Number via WhatsApp</span>
+                                        <p>"Payment by bank transfer only, sorry — the ticket resale sites take too much commission and I've been stung before. Just send to: [bank details]. Once I receive it I'll send the tickets straight over."</p>
                                     </div>
+                                    <div class="story-tactic">
+                                        <span class="story-tactic-label">🎭 Tactic used:</span> <strong>Reciprocity &amp; False Sympathy</strong> — Saying they've "been stung before" makes them sound like a victim themselves, not a scammer. Bank transfer is requested because it's nearly impossible to recover once sent — unlike a card payment or PayPal.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="story-connector"></div>
+
+                            <div class="story-step story-step-end">
+                                <div class="story-number" style="background: #f44336;">!</div>
+                                <div class="story-content">
+                                    <div style="background: #ffebee; border: 2px solid #f44336; border-radius: 10px; padding: 18px;">
+                                        <strong style="color: #c62828; font-size: 1.05em;">The outcome:</strong>
+                                        <p style="margin-top: 8px; color: #555;">The fan transfers £170. The seller stops responding. No tickets ever arrive. The money is gone. This exact scam is reported thousands of times every season in the UK — Action Fraud recorded over 15,000 ticket fraud cases in 2023 alone.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="lesson-content">
+                        <h2>The 4 Tactics — In Depth</h2>
+                        <p style="color: var(--text-mid); margin-bottom: 10px; font-size: 1.05em;">You just saw all four tactics used in that story. Now let's understand each one properly and how to defend against it.</p>
+                        <p style="color: #888; margin-bottom: 25px; font-size: 0.95em; font-style: italic;">💡 Click each tactic to expand it</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px;">
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('se1')">
+                                    <span>🏛️ Authority — Pretending to be official</span>
+                                    <span class="tactic-arrow" id="arrow-se1">▼</span>
+                                </button>
+                                <div class="tactic-body" id="se1" style="display:none;">
+                                    <p><strong>What it looks like:</strong> The attacker claims to work for the club, be an official partner, or represent a legitimate organisation. They use language that sounds professional and authoritative to make you trust them without question.</p>
+                                    <p style="margin-top: 10px;"><strong>Why it works:</strong> We're conditioned to trust authority figures. When someone sounds official, our instinct is to comply rather than question. In the story, claiming to work "in security at Old Trafford" made the seller seem credible and connected.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>🛡️ Your defence:</strong> Anyone can <em>claim</em> authority — what matters is whether you can verify it independently. If someone claims to be from your club or a ticket provider, find the real contact details yourself from the official website and call them directly. Never use contact details provided in the message itself.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('se2')">
+                                    <span>⏰ Scarcity — Creating fear of missing out</span>
+                                    <span class="tactic-arrow" id="arrow-se2">▼</span>
+                                </button>
+                                <div class="tactic-body" id="se2" style="display:none;">
+                                    <p><strong>What it looks like:</strong> "Only 2 tickets left", "someone else is interested", "last pair available". The attacker manufactures competition or limited availability to make you feel you'll lose something valuable if you don't act now.</p>
+                                    <p style="margin-top: 10px;"><strong>Why it works:</strong> The fear of missing out (FOMO) is a powerful motivator, especially for sold-out matches. When we believe something is scarce, we value it more and make less rational decisions to secure it quickly.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>🛡️ Your defence:</strong> Scarcity is almost always manufactured. Ask yourself: how do I actually know this is true? A legitimate seller will not refuse to give you time to verify who they are. If someone insists you must pay immediately or lose the deal, that pressure itself is your warning sign — walk away.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('se3')">
+                                    <span>⚡ Urgency — Forcing a rushed decision</span>
+                                    <span class="tactic-arrow" id="arrow-se3">▼</span>
+                                </button>
+                                <div class="tactic-body" id="se3" style="display:none;">
+                                    <p><strong>What it looks like:</strong> "Pay in the next hour", "offer expires tonight", "I need an answer now". Urgency is often paired with scarcity — together they create a situation where thinking carefully feels like a luxury you can't afford.</p>
+                                    <p style="margin-top: 10px;"><strong>Why it works:</strong> Research shows that under time pressure, people rely on instinct rather than careful analysis. Scammers deliberately create artificial deadlines because a rushed fan is far less likely to stop and verify whether a deal is genuine.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>🛡️ Your defence:</strong> Urgency is designed to switch off your critical thinking. When you feel rushed, deliberately slow down. Take 10 minutes. Tell the seller you'll get back to them. If they disappear or push back hard when you ask for time, you have your answer — it was never a genuine offer.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('se4')">
+                                    <span>❤️ Liking — Building false trust</span>
+                                    <span class="tactic-arrow" id="arrow-se4">▼</span>
+                                </button>
+                                <div class="tactic-body" id="se4" style="display:none;">
+                                    <p><strong>What it looks like:</strong> "Fellow United fan", "been going for 15 years", "I know how hard it is to get tickets". The attacker presents themselves as relatable and trustworthy — someone just like you, not a criminal.</p>
+                                    <p style="margin-top: 10px;"><strong>Why it works:</strong> We naturally lower our guard around people we like or feel we have something in common with. Scammers specifically study fan communities — forums, social media, comment sections — to learn the language, references, and culture needed to sound convincing.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>🛡️ Your defence:</strong> Feeling like someone is friendly and relatable does not mean they are genuine. Trust is earned through verification, not conversation. Always use secure, traceable payment methods — never bank transfer to a stranger, no matter how genuine they seem.
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="lesson-content">
+                        <h2>Your STOP &amp; CHECK Framework</h2>
+                        <p style="color: var(--text-mid); margin-bottom: 25px; font-size: 1.05em;">When you feel any of those four tactics being used on you during a ticket purchase, use this framework before doing anything else.</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
+                            <div style="display: flex; gap: 20px; align-items: flex-start; background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="background: var(--green); color: var(--navy); font-weight: 800; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0;">S</div>
+                                <div>
+                                    <strong style="color: var(--navy); font-size: 1.1em;">STOP — Don't act while you feel emotional</strong>
+                                    <p style="color: var(--text-mid); margin-top: 6px; line-height: 1.7;">If you feel excited, panicked, or rushed — that is exactly when scammers want you to pay. Put the phone down. Take a breath. The feeling of urgency is the weapon, not a reason to act.</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 20px; align-items: flex-start; background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="background: var(--green); color: var(--navy); font-weight: 800; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0;">T</div>
+                                <div>
+                                    <strong style="color: var(--navy); font-size: 1.1em;">THINK — What do I actually know about this person?</strong>
+                                    <p style="color: var(--text-mid); margin-top: 6px; line-height: 1.7;">Separate what they've told you from what you can verify. Saying they're a season ticket holder means nothing. Can you confirm their identity? Are they selling through an official platform? Is there a traceable transaction history?</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 20px; align-items: flex-start; background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="background: var(--green); color: var(--navy); font-weight: 800; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0;">O</div>
+                                <div>
+                                    <strong style="color: var(--navy); font-size: 1.1em;">OFFICIAL — Only buy through verified channels</strong>
+                                    <p style="color: var(--text-mid); margin-top: 6px; line-height: 1.7;">Always use the club's official resale platform, or verified resellers like Ticketmaster or Viagogo. If tickets genuinely aren't available there, they almost certainly aren't available legitimately anywhere else either.</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 20px; align-items: flex-start; background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="background: var(--green); color: var(--navy); font-weight: 800; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0;">P</div>
+                                <div>
+                                    <strong style="color: var(--navy); font-size: 1.1em;">PAY SAFELY — Never use bank transfer to a stranger</strong>
+                                    <p style="color: var(--text-mid); margin-top: 6px; line-height: 1.7;">Bank transfers to unknown individuals are almost never recoverable once sent. Use a credit card or PayPal (goods and services) where possible — these offer fraud protection. If someone insists on bank transfer only, treat that as an immediate red flag.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="exercise">
+                        <h3>🎯 Quick Exercise: Which Tactic Is This?</h3>
+                        <p style="color: var(--navy); margin-bottom: 20px;">Read each message below and identify the social engineering tactic being used.</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                            <div style="background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border);">
+                                <div class="exercise-email" style="margin-bottom: 15px;">
+                                    "As an official partner of the club, we are pleased to offer you exclusive early access to hospitality packages for the upcoming fixture. This offer is only available to selected supporters and expires at midnight tonight."
+                                </div>
+                                <p style="color: var(--text-mid); margin-bottom: 12px; font-size: 0.95em;">Which tactics are being used? (Select all that apply)</p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <button class="exercise-btn" onclick="selectTactic(this, 'q1', 'authority')">🏛️ Authority</button>
+                                    <button class="exercise-btn" onclick="selectTactic(this, 'q1', 'scarcity')">⏰ Scarcity</button>
+                                    <button class="exercise-btn" onclick="selectTactic(this, 'q1', 'urgency')">⚡ Urgency</button>
+                                    <button class="exercise-btn" onclick="selectTactic(this, 'q1', 'liking')">❤️ Liking</button>
+                                </div>
+                                <button class="btn" onclick="checkTactics('q1', ['authority','urgency'])" style="margin-top: 15px; width: 100%;">Check My Answer</button>
+                                <div id="tactic-feedback-q1" class="feedback" style="margin-top: 15px;"></div>
+                            </div>
+
+                            <div style="background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border);">
+                                <div class="exercise-email" style="margin-bottom: 15px;">
+                                    "Hi! Great to meet a fellow United fan. I've been following the team since I was a kid — proper supporter, you know? Anyway I've got a spare ticket going. Would love it to go to someone who actually cares about the club rather than a tout."
+                                </div>
+                                <p style="color: var(--text-mid); margin-bottom: 12px; font-size: 0.95em;">Which tactic is primarily being used?</p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <button class="exercise-btn" onclick="selectTacticSingle(this, 'q2', 'authority')">🏛️ Authority</button>
+                                    <button class="exercise-btn" onclick="selectTacticSingle(this, 'q2', 'scarcity')">⏰ Scarcity</button>
+                                    <button class="exercise-btn" onclick="selectTacticSingle(this, 'q2', 'urgency')">⚡ Urgency</button>
+                                    <button class="exercise-btn" onclick="selectTacticSingle(this, 'q2', 'liking')">❤️ Liking</button>
+                                </div>
+                                <div id="tactic-feedback-q2" class="feedback" style="margin-top: 15px;"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
                 `,
-                'staying-safe': `
+                                'staying-safe': `
+                    <!-- ── MODULE 4 HEADER ── -->
                     <div class="module-header">
                         <div class="icon">🛡️</div>
                         <div>
                             <h1>Staying Safe</h1>
-                            <p>Best practices for protecting yourself online</p>
+                            <p>Practical steps to protect yourself at the stadium, online, and everywhere in between</p>
                         </div>
                     </div>
 
+                    <!-- ── SECTION 1: PUBLIC WIFI ── -->
                     <div class="lesson-content">
-                        <h2>Security Best Practices</h2>
-                        <p style="color: #666; margin-bottom: 30px; font-size: 1.05em;">Learn how to protect yourself online. Click each card to reveal actionable tips:</p>
+                        <h2>Public WiFi at Stadiums — What Really Happens</h2>
+                        <div class="lesson-box">
+                            Most modern stadiums offer free public WiFi to tens of thousands of fans at once. It feels convenient — but that same open network is one of the easiest environments for attackers to operate in. Understanding what can go wrong is the first step to staying safe.
+                        </div>
 
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 3px solid #2196f3;">
-                                        <h4 style="color: #1565c0;">🔐 Password Safety</h4>
-                                        <p style="font-size: 1.2em;">Protect Your Access</p>
-                                        <div class="flip-hint">Click for tips</div>
-                                    </div>
-                                    <div class="flip-card-back gradient-blue">
-                                        <h4>Password Security Tips</h4>
-                                        <div style="text-align: left; margin-top: 15px; font-size: 0.95em;">
-                                            <p>✓ Use unique passwords for EACH site</p>
-                                            <p>✓ Mix uppercase, lowercase, numbers, symbols</p>
-                                            <p>✓ Never share via email or text</p>
-                                            <p>✓ Enable 2-factor authentication</p>
-                                            <p>✓ Use a password manager (Bitwarden, 1Password)</p>
-                                        </div>
+                        <p style="color: var(--text-mid); margin-bottom: 20px; font-size: 1.05em;">Click each threat to understand how it works at a stadium.</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px;">
+
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('wifi1')">
+                                    <span>📡 Rogue Hotspots — Fake WiFi Networks</span>
+                                    <span class="tactic-arrow" id="arrow-wifi1">▼</span>
+                                </button>
+                                <div class="tactic-body" id="wifi1" style="display:none;">
+                                    <p><strong>What happens:</strong> An attacker sits in or near the stadium and creates a WiFi hotspot with a name that looks official — "Stadium_WiFi_Free", "OldTrafford_Guest", or similar. Your phone may even connect to it automatically if you've connected to something similar before.</p>
+                                    <p style="margin-top: 10px;"><strong>What the attacker can see:</strong> Once you're connected, they can monitor your internet traffic. Any site you visit that doesn't use HTTPS, any login you attempt, any data you send — can potentially be intercepted. This is called a Man-in-the-Middle (MITM) attack.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>🛡️ Stay safe:</strong> Before connecting to any stadium WiFi, check the official network name on the club's app or at the turnstile. If you're unsure, use your mobile data instead — it's always safer than public WiFi for anything sensitive.
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border: 3px solid #ff9800;">
-                                        <h4 style="color: #e65100;">📧 Email Safety</h4>
-                                        <p style="font-size: 1.2em;">Don't Fall for Tricks</p>
-                                        <div class="flip-hint">Click for tips</div>
-                                    </div>
-                                    <div class="flip-card-back" style="background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);">
-                                        <h4>Email Security Tips</h4>
-                                        <div style="text-align: left; margin-top: 15px; font-size: 0.95em;">
-                                            <p>✓ Don't open attachments from strangers</p>
-                                            <p>✓ Never click links in suspicious emails</p>
-                                            <p>✓ Hover over links to check real URL</p>
-                                            <p>✓ Report phishing emails immediately</p>
-                                            <p>✓ Use email filtering & spam protection</p>
-                                        </div>
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('wifi2')">
+                                    <span>👁️ Traffic Interception — Someone Watching What You Do</span>
+                                    <span class="tactic-arrow" id="arrow-wifi2">▼</span>
+                                </button>
+                                <div class="tactic-body" id="wifi2" style="display:none;">
+                                    <p><strong>What happens:</strong> On an unsecured or compromised network, an attacker can intercept the data travelling between your device and the internet. This includes login credentials, session tokens (which keep you logged in), and payment information entered on non-HTTPS sites.</p>
+                                    <p style="margin-top: 10px;"><strong>What this looks like in practice:</strong> You log into your ticketing account on stadium WiFi to show your digital ticket. The attacker captures your session token. They use it to access your account from their own device — without ever needing your password.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>🛡️ Stay safe:</strong> Download your tickets to your device before arriving at the stadium so you don't need to log in on-site. Use the official club app where possible — it handles authentication more securely than a browser on public WiFi.
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%); border: 3px solid #009688;">
-                                        <h4 style="color: #004d40;">🌐 WiFi Safety</h4>
-                                        <p style="font-size: 1.2em;">Secure Your Connection</p>
-                                        <div class="flip-hint">Click for tips</div>
-                                    </div>
-                                    <div class="flip-card-back" style="background: linear-gradient(135deg, #26a69a 0%, #009688 100%);">
-                                        <h4>WiFi & Network Tips</h4>
-                                        <div style="text-align: left; margin-top: 15px; font-size: 0.95em;">
-                                            <p>✓ NEVER use public WiFi for banking</p>
-                                            <p>✓ Use phone hotspot instead (more secure)</p>
-                                            <p>✓ Use a VPN on public WiFi</p>
-                                            <p>✓ Disable auto-connect to networks</p>
-                                            <p>✓ Keep WiFi off when not needed</p>
-                                        </div>
+                            <div class="tactic-accordion">
+                                <button class="tactic-toggle" onclick="toggleTactic('wifi3')">
+                                    <span>🔓 Auto-Connect — When Your Phone Connects Without Asking</span>
+                                    <span class="tactic-arrow" id="arrow-wifi3">▼</span>
+                                </button>
+                                <div class="tactic-body" id="wifi3" style="display:none;">
+                                    <p><strong>What happens:</strong> Most phones remember WiFi networks and reconnect automatically. Attackers exploit this by naming their rogue hotspot the same as a network your phone has connected to before — a coffee shop, a previous stadium visit, a hotel. Your phone connects silently, without you doing anything.</p>
+                                    <p style="margin-top: 10px;"><strong>Why this matters:</strong> You might not even realise you're on the attacker's network. Everything looks normal — you just have WiFi. Meanwhile your traffic is being monitored.</p>
+                                    <div class="tactic-example-box">
+                                        <strong>🛡️ Stay safe:</strong> Turn WiFi off before entering a stadium if you don't need it. In your phone settings, disable "auto-join" or "auto-connect" for public networks. Only turn WiFi on when you've verified the correct network name.
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border: 3px solid #9c27b0;">
-                                        <h4 style="color: #6a1b9a;">🔄 Device Safety</h4>
-                                        <p style="font-size: 1.2em;">Keep Systems Updated</p>
-                                        <div class="flip-hint">Click for tips</div>
-                                    </div>
-                                    <div class="flip-card-back" style="background: linear-gradient(135deg, #ab47bc 0%, #8e24aa 100%);">
-                                        <h4>Device Security Tips</h4>
-                                        <div style="text-align: left; margin-top: 15px; font-size: 0.95em;">
-                                            <p>✓ Update OS & software immediately</p>
-                                            <p>✓ Use antivirus/malware protection</p>
-                                            <p>✓ Enable firewall</p>
-                                            <p>✓ Back up important data</p>
-                                            <p>✓ Lock your device when away</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
 
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); border: 3px solid #f44336;">
-                                        <h4 style="color: #c62828;">⚠️ If You're Phished</h4>
-                                        <p style="font-size: 1.2em;">Act Fast!</p>
-                                        <div class="flip-hint">Click for tips</div>
-                                    </div>
-                                    <div class="flip-card-back gradient-red">
-                                        <h4>What To Do Immediately</h4>
-                                        <div style="text-align: left; margin-top: 15px; font-size: 0.95em;">
-                                            <p>✓ STOP - Don't enter more information</p>
-                                            <p>✓ Change your password immediately</p>
-                                            <p>✓ Report to the real organisation</p>
-                                            <p>✓ Monitor your accounts closely</p>
-                                            <p>✓ Check for suspicious activity</p>
-                                        </div>
-                                    </div>
+                        <!-- WiFi safety quick checklist -->
+                        <div style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); border-radius: 14px; padding: 25px; color: white; margin-top: 10px;">
+                            <h3 style="color: var(--green); margin-bottom: 18px;">📋 Stadium WiFi — Quick Safety Checklist</h3>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span style="color: var(--green); font-size: 1.2em; flex-shrink:0;">✓</span>
+                                    <span>Download your tickets to your device <strong>before</strong> you leave home</span>
                                 </div>
-                            </div>
-
-                            <div class="flip-card" onclick="toggleFlip(this)">
-                                <div class="flip-card-inner">
-                                    <div class="flip-card-front" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border: 3px solid #4caf50;">
-                                        <h4 style="color: #2e7d32;">📱 Mobile Safety</h4>
-                                        <p style="font-size: 1.2em;">Protect Your Phone</p>
-                                        <div class="flip-hint">Click for tips</div>
-                                    </div>
-                                    <div class="flip-card-back gradient-green">
-                                        <h4>Mobile Device Tips</h4>
-                                        <div style="text-align: left; margin-top: 15px; font-size: 0.95em;">
-                                            <p>✓ Use PIN or biometric lock</p>
-                                            <p>✓ Only install from official app stores</p>
-                                            <p>✓ Check app permissions carefully</p>
-                                            <p>✓ Keep apps & OS updated</p>
-                                            <p>✓ Avoid storing passwords on device</p>
-                                        </div>
-                                    </div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span style="color: var(--green); font-size: 1.2em; flex-shrink:0;">✓</span>
+                                    <span>Verify the official WiFi network name from the club app or signage</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span style="color: var(--green); font-size: 1.2em; flex-shrink:0;">✓</span>
+                                    <span>Never log into ticketing accounts or make payments on public WiFi</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span style="color: var(--green); font-size: 1.2em; flex-shrink:0;">✓</span>
+                                    <span>Use your mobile data hotspot instead if you need to do anything sensitive</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span style="color: var(--green); font-size: 1.2em; flex-shrink:0;">✓</span>
+                                    <span>Disable auto-connect to public networks in your phone settings</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- ── SECTION 2: SAFE TICKET BUYING ── -->
+                    <div class="lesson-content">
+                        <h2>Safe Ticket Buying — The Moment It Matters Most</h2>
+                        <p style="color: var(--text-mid); margin-bottom: 25px; font-size: 1.05em;">Everything you've learned across this platform leads to this moment — when you're about to buy a ticket. Follow this checklist every single time.</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
+
+                            <div style="display: flex; gap: 20px; align-items: flex-start; background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="background: var(--navy); color: var(--green); font-weight: 800; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3em; flex-shrink: 0;">1</div>
+                                <div>
+                                    <strong style="color: var(--navy); font-size: 1.05em;">Only buy from official sources</strong>
+                                    <p style="color: var(--text-mid); margin-top: 6px; line-height: 1.7;">The club's official website, official app, or authorised resale partners listed on the club's site. If the club's official site says tickets are sold out, they are sold out — no legitimate third-party seller has access to tickets that the club does not.</p>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 20px; align-items: flex-start; background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="background: var(--navy); color: var(--green); font-weight: 800; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3em; flex-shrink: 0;">2</div>
+                                <div>
+                                    <strong style="color: var(--navy); font-size: 1.05em;">Type the URL — never click a link</strong>
+                                    <p style="color: var(--text-mid); margin-top: 6px; line-height: 1.7;">Always navigate to the ticketing site yourself by typing the address directly into your browser. Links in emails, texts, and social media posts can take you to convincing fake sites even when they look genuine. Typing it yourself guarantees you end up at the real destination.</p>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 20px; align-items: flex-start; background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="background: var(--navy); color: var(--green); font-weight: 800; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3em; flex-shrink: 0;">3</div>
+                                <div>
+                                    <strong style="color: var(--navy); font-size: 1.05em;">Check the address bar before entering any details</strong>
+                                    <p style="color: var(--text-mid); margin-top: 6px; line-height: 1.7;">Look for the padlock icon and confirm the domain is exactly correct — not a near-match. Pay attention to the full domain, not just the first part. <span style="font-family: monospace; background: #ffebee; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;">ticketmaster.co.uk</span> is legitimate. <span style="font-family: monospace; background: #ffebee; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;">ticketmaster-secure-login.co.uk</span> is not.</p>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 20px; align-items: flex-start; background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="background: var(--navy); color: var(--green); font-weight: 800; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3em; flex-shrink: 0;">4</div>
+                                <div>
+                                    <strong style="color: var(--navy); font-size: 1.05em;">Pay by credit card or PayPal (Goods & Services)</strong>
+                                    <p style="color: var(--text-mid); margin-top: 6px; line-height: 1.7;">Credit card purchases are protected under Section 75 of the Consumer Credit Act — meaning your bank must refund you if you don't receive what you paid for. PayPal Goods & Services offers similar buyer protection. Bank transfers to individuals offer no protection whatsoever.</p>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 20px; align-items: flex-start; background: white; border-radius: 12px; padding: 20px; border: 2px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div style="background: var(--navy); color: var(--green); font-weight: 800; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3em; flex-shrink: 0;">5</div>
+                                <div>
+                                    <strong style="color: var(--navy); font-size: 1.05em;">If a deal looks too good — it is</strong>
+                                    <p style="color: var(--text-mid); margin-top: 6px; line-height: 1.7;">Tickets priced significantly below face value from unofficial sources are almost always scams. Genuine sellers on official resale platforms typically sell at or above face value because demand is high. A suspiciously low price is designed to make you act quickly before doubt sets in.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ── SECTION 3: IF YOUVE BEEN SCAMMED ── -->
+                    <div class="lesson-content">
+                        <h2>If You've Been Scammed — What to Do Right Now</h2>
+                        <p style="color: var(--text-mid); margin-bottom: 20px; font-size: 1.05em;">Discovering you've been scammed is stressful. Speed matters — the faster you act, the better your chances of limiting the damage or recovering your money. Follow these steps in order.</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 0; margin-bottom: 30px;">
+
+                            <div class="story-step">
+                                <div class="story-number" style="background: #ff6b6b; color: white;">1</div>
+                                <div class="story-content">
+                                    <strong style="color: var(--navy); font-size: 1.05em;">Contact your bank or card provider immediately</strong>
+                                    <p style="color: var(--text-mid); margin-top: 8px; line-height: 1.7;">Call the number on the back of your card and explain you've been a victim of fraud. Ask them to reverse the transaction if possible, block your card, and flag the account for monitoring. The sooner you call, the higher the chance of recovery — especially for card payments.</p>
+                                </div>
+                            </div>
+
+                            <div class="story-connector"></div>
+
+                            <div class="story-step">
+                                <div class="story-number" style="background: #ffa726; color: white;">2</div>
+                                <div class="story-content">
+                                    <strong style="color: var(--navy); font-size: 1.05em;">Change your passwords — starting with email</strong>
+                                    <p style="color: var(--text-mid); margin-top: 8px; line-height: 1.7;">If you entered credentials on a fake site, assume those passwords are compromised. Change them immediately, starting with your email account — it's the key to everything else. Then change passwords for any account that used the same password. Enable two-factor authentication on all accounts if you haven't already.</p>
+                                </div>
+                            </div>
+
+                            <div class="story-connector"></div>
+
+                            <div class="story-step">
+                                <div class="story-number" style="background: #42a5f5; color: white;">3</div>
+                                <div class="story-content">
+                                    <strong style="color: var(--navy); font-size: 1.05em;">Report it to Action Fraud</strong>
+                                    <p style="color: var(--text-mid); margin-top: 8px; line-height: 1.7;">Report online at <strong>actionfraud.police.uk</strong> or by calling <strong>0300 123 2040</strong>. You'll receive a crime reference number which is useful if you need to pursue a refund. Action Fraud passes reports to the National Fraud Intelligence Bureau — your report helps prevent others from being scammed by the same criminal.</p>
+                                </div>
+                            </div>
+
+                            <div class="story-connector"></div>
+
+                            <div class="story-step">
+                                <div class="story-number" style="background: var(--green); color: var(--navy);">4</div>
+                                <div class="story-content">
+                                    <strong style="color: var(--navy); font-size: 1.05em;">Report to the platform where the scam happened</strong>
+                                    <p style="color: var(--text-mid); margin-top: 8px; line-height: 1.7;">If you were contacted via Facebook, WhatsApp, Twitter/X, or a forum, report the account or message to that platform. Most have fraud reporting tools. This gets the scammer's account removed and protects other fans from the same account.</p>
+                                </div>
+                            </div>
+
+                            <div class="story-connector"></div>
+
+                            <div class="story-step">
+                                <div class="story-number" style="background: var(--navy); color: var(--green);">5</div>
+                                <div class="story-content">
+                                    <strong style="color: var(--navy); font-size: 1.05em;">Tell the club</strong>
+                                    <p style="color: var(--text-mid); margin-top: 8px; line-height: 1.7;">Contact your club's official supporter services or ticketing team. Clubs actively monitor for scammers impersonating them and can issue warnings to other fans. They may also be able to assist if the scam involved someone falsely claiming to be affiliated with the club.</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div style="background: #fff8e1; border: 2px solid var(--amber); border-radius: 12px; padding: 20px; margin-top: 5px;">
+                            <strong style="color: #8a6000;">⚠️ Important:</strong>
+                            <p style="color: #555; margin-top: 8px; line-height: 1.7;">Do not feel embarrassed about being scammed — these criminals are professionals who specifically study how to exploit trust. Reporting promptly is the most important thing you can do, both for yourself and for other fans.</p>
+                        </div>
+                    </div>
+
+                    <!-- ── SECTION 4: EVERYDAY SECURITY HABITS ── -->
+                    <div class="lesson-content">
+                        <h2>Everyday Security Habits</h2>
+                        <p style="color: var(--text-mid); margin-bottom: 25px; font-size: 1.05em;">These four habits take minutes to set up and significantly reduce your risk of being compromised — not just during matchday, but every day.</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px;">
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('habit1')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span style="font-size: 1.4em;">🔑</span>
+                                        <span style="font-weight: 700; color: var(--navy);">Use a Password Manager</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-habit1">▼</span>
+                                </button>
+                                <div class="redflag-body" id="habit1" style="display:none;">
+                                    <p>Most people reuse passwords across multiple sites because remembering unique ones is impossible. The problem is that when one site is breached, attackers try those credentials everywhere else — this is called credential stuffing.</p>
+                                    <p style="margin-top: 10px;">A password manager (such as Bitwarden, which is free, or 1Password) generates and stores a unique, complex password for every site you use. You only need to remember one master password. Your ticketing accounts, email, and banking all get different passwords automatically.</p>
+                                    <div class="redflag-example" style="border-left-color: var(--green);">
+                                        <strong>✅ Recommended free option:</strong> Bitwarden — available on all devices, open source, and trusted by security professionals.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('habit2')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span style="font-size: 1.4em;">🔐</span>
+                                        <span style="font-weight: 700; color: var(--navy);">Enable Two-Factor Authentication (2FA)</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-habit2">▼</span>
+                                </button>
+                                <div class="redflag-body" id="habit2" style="display:none;">
+                                    <p>Two-factor authentication means that even if an attacker gets your password, they still cannot access your account without a second verification step — usually a code sent to your phone or generated by an app.</p>
+                                    <p style="margin-top: 10px;">Enable 2FA on your email account first — it's the most important. Then on your ticketing accounts, banking app, and social media. App-based 2FA (such as Google Authenticator or Aegis) is more secure than SMS codes, as SIM-swapping attacks can intercept texts.</p>
+                                    <div class="redflag-example" style="border-left-color: var(--green);">
+                                        <strong>✅ Where to start:</strong> Go to your email provider's security settings and look for "Two-Step Verification" or "2FA". It takes about 2 minutes to set up and immediately doubles your account security.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('habit3')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span style="font-size: 1.4em;">📲</span>
+                                        <span style="font-weight: 700; color: var(--navy);">Keep Your Devices Updated</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-habit3">▼</span>
+                                </button>
+                                <div class="redflag-body" id="habit3" style="display:none;">
+                                    <p>Software updates aren't just about new features — they patch security vulnerabilities that attackers actively exploit. When a vulnerability is discovered and a patch is released, attackers know that many people won't update immediately and target those devices specifically.</p>
+                                    <p style="margin-top: 10px;">Keep your phone's operating system, your apps (especially your banking and ticketing apps), and your browser up to date. Enable automatic updates where possible so you don't have to think about it.</p>
+                                    <div class="redflag-example" style="border-left-color: var(--green);">
+                                        <strong>✅ Quick action:</strong> Check for updates now — Settings → General → Software Update (iPhone) or Settings → System → System Update (Android).
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="redflag-accordion">
+                                <button class="redflag-toggle" onclick="toggleRedFlag('habit4')">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span style="font-size: 1.4em;">🕵️</span>
+                                        <span style="font-weight: 700; color: var(--navy);">Check If Your Data Has Been Breached</span>
+                                    </div>
+                                    <span class="tactic-arrow" id="arrow-habit4">▼</span>
+                                </button>
+                                <div class="redflag-body" id="habit4" style="display:none;">
+                                    <p>Data breaches happen constantly — companies get hacked and millions of email addresses and passwords are leaked onto the dark web. Attackers buy these lists and use them to try to access accounts. You may have been affected without knowing.</p>
+                                    <p style="margin-top: 10px;">Visit <strong>haveibeenpwned.com</strong> — a free, trusted service run by a security researcher — and enter your email address. It will tell you if your details have appeared in any known data breaches. If they have, change the affected passwords immediately.</p>
+                                    <div class="redflag-example" style="border-left-color: var(--green);">
+                                        <strong>✅ Do this now:</strong> haveibeenpwned.com — free, no account needed, trusted by millions including major organisations and governments.
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ── SECTION 5: INTERACTIVE EXERCISE ── -->
+                    <div class="exercise">
+                        <h3>🎯 Final Exercise: What Would You Do?</h3>
+                        <p style="color: var(--navy); margin-bottom: 20px;">It's matchday. Read this scenario and choose the safest course of action.</p>
+
+                        <div class="exercise-email" style="margin-bottom: 20px;">
+                            You've just arrived at the stadium. The match starts in 45 minutes. You open your ticketing app and realise your digital ticket hasn't downloaded. You try to load it but the signal is weak. Someone nearby says "just connect to StadiumWiFi_Free, it's really fast." You connect and try to open the app — it asks you to log in again. Your email also has a notification: "New sign-in to your account detected."
+                        </div>
+
+                        <p style="color: var(--text-mid); margin-bottom: 15px; font-weight: 600;">What is the safest thing to do right now?</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="exercise-btn" style="text-align:left; padding: 15px 20px;" onclick="answerSafety('a')">A) Log in quickly on the stadium WiFi to get your ticket — you're running out of time</button>
+                            <button class="exercise-btn" style="text-align:left; padding: 15px 20px;" onclick="answerSafety('b')">B) Turn WiFi off, switch to mobile data, and log in through your mobile network instead</button>
+                            <button class="exercise-btn" style="text-align:left; padding: 15px 20px;" onclick="answerSafety('c')">C) Ignore the sign-in notification and just try a different WiFi network nearby</button>
+                            <button class="exercise-btn" style="text-align:left; padding: 15px 20px;" onclick="answerSafety('d')">D) Close the app and go to the box office to explain the situation</button>
+                        </div>
+
+                        <div id="safety-exercise-feedback" class="feedback" style="margin-top: 20px;"></div>
                     </div>
                 `,
                 'test-knowledge': `
@@ -1204,8 +1532,8 @@
                         <button class="submit-btn" id="submitBtn" onclick="submitQuiz()">Submit Quiz</button>
                     </div>
 
-                    <div id="emailForm" style="display: none; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-radius: 15px; padding: 40px; text-align: center;">
-                        <h2 style="color: #1565c0; margin-bottom: 20px;">📧 Get Your Results</h2>
+                    <div id="emailForm" style="display: none; background: linear-gradient(135deg, #e6fff9 0%, #d0f5ee 100%); border-radius: 15px; padding: 40px; text-align: center; border: 2px solid var(--green);">
+                        <h2 style="color: var(--navy); margin-bottom: 20px;">📧 Get Your Results</h2>
                         <p style="color: #555; margin-bottom: 30px; font-size: 1.05em;">Enter your email address to receive your detailed quiz results and areas to review:</p>
                         
                         <div style="max-width: 400px; margin: 0 auto; margin-bottom: 25px;">
@@ -1213,7 +1541,7 @@
                                 type="email" 
                                 id="emailInput" 
                                 placeholder="Enter your email address" 
-                                style="width: 100%; padding: 15px; border: 2px solid #2196f3; border-radius: 10px; font-size: 1em; margin-bottom: 20px;"
+                                style="width: 100%; padding: 15px; border: 2px solid var(--green); border-radius: 10px; font-size: 1em; margin-bottom: 20px; outline: none;"
                             >
                             <button 
                                 class="btn" 
@@ -1231,7 +1559,7 @@
                         <div class="score" id="scoreDisplay">0/12</div>
                         <p id="scoreMessage"></p>
                         
-                        <div id="feedbackSection" style="text-align: left; max-width: 600px; margin: 30px auto; background: rgba(255,255,255,0.2); padding: 25px; border-radius: 10px;">
+                        <div id="feedbackSection" style="text-align: left; max-width: 600px; margin: 30px auto; background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.3); padding: 25px; border-radius: 10px;">
                             <h3 style="margin-bottom: 15px;">📚 Areas to Review:</h3>
                             <ul id="feedbackList" style="list-style: none; padding: 0; line-height: 2;">
                                 <li>✓ General Phishing Awareness</li>
@@ -1242,7 +1570,7 @@
                             </ul>
                         </div>
 
-                        <button class="btn" onclick="loadModule('home')" style="font-size: 1.1em; padding: 12px 30px; margin-top: 20px;">← Back to Home</button>
+                        <button class="btn" onclick="loadModule('home')" style="font-size: 1.1em; padding: 12px 30px; margin-top: 20px; background: var(--amber); color: var(--navy);">← Back to Home</button>
                     </div>
                 `
             };
@@ -1261,7 +1589,23 @@
             });
         }
 
-        function answerExercise(exerciseId, answer) {
+        // ════════════════════════════════════════════════════════════
+// FUNCTION: answerExercise(exerciseId, answer)
+// PURPOSE:  Handles the Module 2 interactive phishing email
+//           exercise. Called when user clicks Phishing or
+//           Legitimate button.
+// HOW IT WORKS:
+//   1. Finds the feedback div for this exercise by ID
+//   2. Resets any previously selected button styles
+//   3. Checks if the user's answer matches the correct answer
+//      (always 'phishing' for the email-phish exercise)
+//   4. Applies correct/wrong CSS class to the clicked button
+//   5. Shows detailed feedback explaining the red flags
+// PARAMETERS:
+//   exerciseId (string) — identifies which exercise e.g. 'email-phish'
+//   answer (string)     — 'phishing' or 'legitimate'
+// ════════════════════════════════════════════════════════════
+function answerExercise(exerciseId, answer) {
             const feedbackDiv = document.getElementById(`exercise-feedback-${exerciseId}`);
             const buttons = document.querySelectorAll(`[onclick*="${exerciseId}"]`);
             
@@ -1280,10 +1624,15 @@
 
             feedbackDiv.className = `feedback show ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}`;
             feedbackDiv.innerHTML = `
-                <strong>${isCorrect ? '✓ CORRECT!' : '✗ INCORRECT'}</strong>
-                ${isCorrect 
-                    ? 'Well done! This is a phishing email. Red flags include: generic greeting, urgent language, suspicious sender domain, and pressure to click immediately. Real organisations never ask you to verify via email links.'
-                    : 'This is actually a phishing email! Red flags: generic greeting, urgent language, suspicious sender domain, and pressure to click immediately. Real organisations never ask you to verify via email links.'}
+                <strong style="font-size:1.1em;">${isCorrect ? '✓ CORRECT! Well spotted.' : '✗ INCORRECT — This is a phishing email. Here is why:'}</strong>
+                <ul style="margin-top:12px; padding-left:20px; line-height:2;">
+                    <li><strong>Suspicious sender:</strong> The address is <em>manchesterunited-tickets.net</em> — not the official <em>manutd.com</em> domain.</li>
+                    <li><strong>Generic greeting:</strong> "Dear Customer" — a real club email would use your name.</li>
+                    <li><strong>Urgent threatening language:</strong> "URGENT", "immediately", "permanent suspension within 24 hours" — designed to panic you.</li>
+                    <li><strong>Suspicious link:</strong> The link goes to <em>secure-manutd-login.co.uk</em> — a fake domain, not the real Manchester United site.</li>
+                    <li><strong>Requesting action via email:</strong> Legitimate organisations never ask you to verify your account through an email link.</li>
+                </ul>
+                ${isCorrect ? '<p style="margin-top:12px; color:#1b5e20;">Great work — you identified all the key warning signs from this module.</p>' : '<p style="margin-top:12px;">Go back and review the red flags above, then try again. Each one of these signs on its own is suspicious — together they make this a clear phishing attempt.</p>'}
             `;
         }
 
@@ -1291,13 +1640,13 @@
             const questions = [
                 {
                     id: 'q1',
-                    question: 'You receive an email from "your bank" asking you to verify your account. What is the BEST action?',
+                    question: 'You receive a text claiming to be from your club\'s ticketing team saying your season ticket payment has failed and you must re-enter your card details within 2 hours or lose your seat. What should you do?',
                     multipleAnswer: false,
                     options: [
-                        { text: 'Click the link and verify immediately', correct: false },
-                        { text: 'Call your bank using their official phone number to verify', correct: true },
-                        { text: 'Reply to the email asking them to prove they\'re real', correct: false },
-                        { text: 'Ignore it completely', correct: false }
+                        { text: 'Click the link in the text and re-enter your card details immediately', correct: false },
+                        { text: 'Call the club using the number on their official website to verify', correct: true },
+                        { text: 'Reply to the text asking for more information', correct: false },
+                        { text: 'Ignore it — season tickets cannot be cancelled this quickly', correct: false }
                     ]
                 },
                 {
@@ -1335,13 +1684,13 @@
                 },
                 {
                     id: 'q5',
-                    question: 'You get a text: "FREE SCARF! Verify quickly by entering credit card info." What should you do? (Select ALL correct actions)',
-                    multipleAnswer: true,
+                    question: 'You realise you have just sent \u00a3150 via bank transfer to someone selling tickets who has now stopped responding. What should you do FIRST?',
+                    multipleAnswer: false,
                     options: [
-                        { text: 'Enter your credit card details for the free item', correct: false },
-                        { text: 'Delete the message immediately', correct: true },
-                        { text: 'Contact the team directly using their official number', correct: true },
-                        { text: 'Reply asking for more details', correct: false }
+                        { text: 'Report it to Action Fraud immediately', correct: false },
+                        { text: 'Contact your bank straight away and ask them to recall the payment', correct: true },
+                        { text: 'Change all your passwords', correct: false },
+                        { text: 'Post about it on social media to warn others', correct: false }
                     ]
                 },
                 {
@@ -1390,24 +1739,24 @@
                 },
                 {
                     id: 'q10',
-                    question: 'Which password practice is MOST important for account security?',
+                    question: 'What is the most effective way to manage passwords across your ticketing, email, and banking accounts?',
                     multipleAnswer: false,
                     options: [
-                        { text: 'Using the same strong password for all sites', correct: false },
-                        { text: 'Using a unique password for each site', correct: true },
-                        { text: 'Sharing passwords with trusted friends only', correct: false },
-                        { text: 'Writing passwords in a notebook at home', correct: false }
+                        { text: 'Use one strong password for all accounts so you never forget it', correct: false },
+                        { text: 'Write them in a secure notebook kept at home', correct: false },
+                        { text: 'Use a password manager to generate and store a unique password for each account', correct: true },
+                        { text: 'Use your name and a number, changing the number for each site', correct: false }
                     ]
                 },
                 {
                     id: 'q11',
-                    question: 'You accidentally clicked a phishing link and entered your email. What are the next steps? (Select ALL that apply)',
+                    question: 'You clicked a link in a suspicious email and entered your card details before realising it was fake. What should you do? (Select ALL that apply)',
                     multipleAnswer: true,
                     options: [
-                        { text: 'Immediately change your password for that account', correct: true },
-                        { text: 'Close the tab and do nothing else', correct: false },
-                        { text: 'Monitor the account for suspicious activity', correct: true },
-                        { text: 'Report the phishing to the real organisation', correct: true }
+                        { text: 'Contact your bank immediately to report fraud and block the card', correct: true },
+                        { text: 'Change your password for that account and any others using the same password', correct: true },
+                        { text: 'Close the tab and hope nothing happens', correct: false },
+                        { text: 'Report the phishing email to the real organisation', correct: true }
                     ]
                 },
                 {
@@ -1442,6 +1791,24 @@
             window.quizAnswers = {};
         }
 
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: selectQuizOption(qId, optIdx, isMultiple, element)
+        // PURPOSE:  Called when a user clicks a quiz answer option.
+        //           Tracks their selection and updates the UI.
+        // HOW IT WORKS:
+        //   1. For single-answer (radio): stores one answer per question
+        //      in window.quizAnswers[qId] = optIdx
+        //   2. For multiple-answer (checkbox): stores an array of
+        //      selected indices in window.quizAnswers[qId]
+        //   3. Adds 'selected' CSS class to clicked option
+        //   4. Checks if all questions are answered — if so,
+        //      enables the Submit Quiz button
+        // PARAMETERS:
+        //   qId       — question ID string e.g. 'q1'
+        //   optIdx    — index of the selected option (0, 1, 2, 3)
+        //   isMultiple — boolean, true if multiple answers allowed
+        //   element   — the DOM element clicked (for styling)
+        // ════════════════════════════════════════════════════════════
         function selectQuizOption(questionId, optionIndex, isMultiple, element) {
             if (isMultiple) {
                 // For checkbox questions, handle multiple selections
@@ -1483,6 +1850,22 @@
             submitBtn.disabled = answeredCount < totalQuestions;
         }
 
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: submitQuiz()
+        // PURPOSE:  Scores the completed quiz and shows the
+        //           email collection screen.
+        // HOW IT WORKS:
+        //   1. Loops through all questions in window.quizData
+        //   2. For each question, checks the user's stored answer
+        //      against the correct answer(s)
+        //   3. For multiple-answer questions, checks that ALL
+        //      correct options are selected and NO incorrect
+        //      options are selected
+        //   4. Calculates score and percentage
+        //   5. Stores results in window.quizResults for use
+        //      by sendResultsEmail() and showQuizResults()
+        //   6. Hides the quiz and shows the email input form
+        // ════════════════════════════════════════════════════════════
         function submitQuiz() {
             let correct = 0;
             
@@ -1526,6 +1909,25 @@
             document.getElementById('emailForm').style.display = 'block';
         }
 
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: sendResultsEmail()
+        // PURPOSE:  Sends the user's quiz results to their email
+        //           address automatically using EmailJS.
+        // HOW IT WORKS:
+        //   1. Gets the email address from #emailInput field
+        //   2. Validates it contains '@' character
+        //   3. Builds an answer breakdown string from quizAnswers
+        //   4. Determines areas to review based on percentage score
+        //   5. Disables the send button and shows loading state
+        //   6. Calls emailjs.send() with:
+        //      - Service ID: the connected email service
+        //      - Template ID: the EmailJS template
+        //      - Variables: to_email, score, percentage, feedback
+        //   7. On success: shows confirmation and loads results page
+        //   8. On failure: re-enables button and shows error alert
+        // NOTE: EmailJS SDK is loaded in the <head> and initialised
+        //       with the public key on page load
+        // ════════════════════════════════════════════════════════════
         function sendResultsEmail() {
             const email = document.getElementById('emailInput').value;
 
@@ -1592,6 +1994,19 @@
             });
         }
 
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: showQuizResults()
+        // PURPOSE:  Displays the final results screen after the
+        //           email has been sent successfully.
+        // HOW IT WORKS:
+        //   1. Hides the email form
+        //   2. Shows the .results div with animation
+        //   3. Populates the score, percentage, and grade message
+        //   4. Lists which modules the user should review based
+        //      on their score (below 70% = review all,
+        //      70-84% = review advanced topics,
+        //      85%+ = strong performance)
+        // ════════════════════════════════════════════════════════════
         function showQuizResults() {
             const results = window.quizResults;
             document.getElementById('emailForm').style.display = 'none';
@@ -1605,6 +2020,219 @@
             element.classList.toggle('flipped');
         }
 
+
+
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: toggleTactic(id)
+        // PURPOSE:  Opens or closes an accordion card in Modules 1,
+        //           3, and 4. Used for the tactic explanations,
+        //           common tactics, and WiFi threat sections.
+        // HOW IT WORKS:
+        //   1. Finds the body div by id
+        //   2. Finds the arrow span by 'arrow-' + id
+        //   3. Toggles display between 'none' and 'block'
+        //   4. Rotates the arrow 180° when open to signal direction
+        // PARAMETER:
+        //   id (string) — matches the id on the body div
+        //                 e.g. 't1', 'se1', 'wifi1'
+        // ════════════════════════════════════════════════════════════
+        function toggleTactic(id) {
+            const body = document.getElementById(id);
+            const arrow = document.getElementById('arrow-' + id);
+            if (body.style.display === 'none') {
+                body.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                body.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: toggleRedFlag(id)
+        // PURPOSE:  Same accordion logic as toggleTactic() but used
+        //           for the red flag cards in Module 2 and the
+        //           everyday habits cards in Module 4.
+        // PARAMETER:
+        //   id (string) — matches body div id e.g. 'rf1', 'habit1'
+        // ════════════════════════════════════════════════════════════
+        function toggleRedFlag(id) {
+            const body = document.getElementById(id);
+            const arrow = document.getElementById('arrow-' + id);
+            if (body.style.display === 'none') {
+                body.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                body.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Tactic exercise multi-select
+        window.tacticSelections = {};
+
+
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: selectTactic(btn, qId, tactic)
+        // PURPOSE:  Handles multi-select answers in Module 3's
+        //           tactic identification exercise (Q1 — select all).
+        // HOW IT WORKS:
+        //   1. Maintains a window.tacticSelections object to track
+        //      which tactics the user has selected per question
+        //   2. If tactic not already selected — adds it and
+        //      highlights the button green
+        //   3. If tactic already selected — removes it and
+        //      resets button style (acts as a toggle)
+        // PARAMETERS:
+        //   btn    — the button DOM element that was clicked
+        //   qId    — question ID string e.g. 'q1'
+        //   tactic — tactic string e.g. 'authority', 'scarcity'
+        // ════════════════════════════════════════════════════════════
+        function selectTactic(btn, qId, tactic) {
+            if (!window.tacticSelections[qId]) window.tacticSelections[qId] = [];
+            const idx = window.tacticSelections[qId].indexOf(tactic);
+            if (idx === -1) {
+                window.tacticSelections[qId].push(tactic);
+                btn.style.background = 'var(--green)';
+                btn.style.color = 'var(--navy)';
+                btn.style.borderColor = 'var(--green)';
+            } else {
+                window.tacticSelections[qId].splice(idx, 1);
+                btn.style.background = 'white';
+                btn.style.color = 'var(--text-dark)';
+                btn.style.borderColor = 'var(--border)';
+            }
+        }
+
+
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: checkTactics(qId, correct)
+        // PURPOSE:  Validates the user's multi-select tactic answer
+        //           in Module 3 Exercise 1 when they click Check.
+        // HOW IT WORKS:
+        //   1. Gets the user's selections from window.tacticSelections
+        //   2. Checks that every correct answer is selected AND
+        //      no incorrect answers are selected
+        //   3. Shows correct or incorrect feedback accordingly
+        // PARAMETERS:
+        //   qId     — question ID string e.g. 'q1'
+        //   correct — array of correct tactic strings
+        //             e.g. ['authority', 'urgency']
+        // ════════════════════════════════════════════════════════════
+        function checkTactics(qId, correct) {
+            const selected = window.tacticSelections[qId] || [];
+            const feedbackDiv = document.getElementById('tactic-feedback-' + qId);
+            const allCorrect = correct.every(c => selected.includes(c)) && selected.every(c => correct.includes(c));
+            feedbackDiv.className = 'feedback show ' + (allCorrect ? 'feedback-correct' : 'feedback-wrong');
+            if (allCorrect) {
+                feedbackDiv.innerHTML = '<strong>✓ Correct!</strong> This message uses <strong>Authority</strong> ("official partner of the club") and <strong>Urgency</strong> ("expires at midnight tonight") to pressure you into acting fast without verifying the offer.';
+            } else {
+                feedbackDiv.innerHTML = '<strong>✗ Not quite.</strong> Look again — the message claims to be an <strong>official partner</strong> (Authority) and creates a time deadline of <strong>midnight tonight</strong> (Urgency). Both tactics are present together.';
+            }
+        }
+
+
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: selectTacticSingle(btn, qId, tactic)
+        // PURPOSE:  Handles single-select answers in Module 3's
+        //           tactic identification exercise (Q2 — one answer).
+        // HOW IT WORKS:
+        //   1. Resets ALL buttons in the question to unselected
+        //   2. Highlights only the clicked button in navy
+        //   3. Immediately shows feedback — no separate Check button
+        //      needed for single-answer questions
+        //   4. Provides tailored feedback for each wrong answer
+        //      explaining why it's incorrect
+        // PARAMETERS:
+        //   btn    — the button DOM element that was clicked
+        //   qId    — question ID string
+        //   tactic — the tactic the user selected
+        // ════════════════════════════════════════════════════════════
+        function selectTacticSingle(btn, qId, tactic) {
+            // Reset all buttons in this question
+            const btns = document.querySelectorAll('[onclick*="selectTacticSingle"][onclick*="' + qId + '"]');
+            btns.forEach(b => {
+                b.style.background = 'white';
+                b.style.color = 'var(--text-dark)';
+                b.style.borderColor = 'var(--border)';
+            });
+            btn.style.background = 'var(--navy)';
+            btn.style.color = 'white';
+            btn.style.borderColor = 'var(--navy)';
+
+            const feedbackDiv = document.getElementById('tactic-feedback-' + qId);
+            feedbackDiv.className = 'feedback show ' + (tactic === 'liking' ? 'feedback-correct' : 'feedback-wrong');
+            if (tactic === 'liking') {
+                feedbackDiv.innerHTML = '<strong>✓ Correct!</strong> This is <strong>Liking</strong> — the attacker presents themselves as a fellow passionate fan to build trust and make you feel you have something in common. The appeal to shared identity ("someone who actually cares") is designed to lower your guard.';
+            } else if (tactic === 'authority') {
+                feedbackDiv.innerHTML = '<strong>✗ Not quite.</strong> There\'s no claim of authority here \u2014 no official title or organisation. The main tactic is <strong>Liking</strong>: presenting as a fellow passionate fan to build trust through shared identity.';
+            } else if (tactic === 'scarcity') {
+                feedbackDiv.innerHTML = '<strong>✗ Not quite.</strong> There\'s no mention of limited availability here. The main tactic is <strong>Liking</strong>: the attacker builds rapport by presenting themselves as a genuine long-term fan just like you.';
+            } else {
+                feedbackDiv.innerHTML = '<strong>✗ Not quite.</strong> There\'s no time pressure here. The main tactic is <strong>Liking</strong>: the attacker builds trust by presenting as a fellow fan with shared values, making you feel they\'re trustworthy before any money is mentioned.';
+            }
+        }
+
+
+        // ── Module 4 final exercise: safety scenario answer handler ──
+
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: answerSafety(choice)
+        // PURPOSE:  Handles the Module 4 matchday scenario exercise.
+        //           The user picks from options A, B, C, or D.
+        // HOW IT WORKS:
+        //   1. Resets all button styles to unselected
+        //   2. Highlights the selected button
+        //   3. Shows tailored feedback for each option:
+        //      B = correct (green), A/C/D = incorrect (red/navy)
+        //   4. Each wrong answer explains specifically why it
+        //      is unsafe or suboptimal, not just "wrong"
+        // PARAMETER:
+        //   choice (string) — 'a', 'b', 'c', or 'd'
+        // ════════════════════════════════════════════════════════════
+        function answerSafety(choice) {
+            const feedback = document.getElementById('safety-exercise-feedback');
+            const btns = document.querySelectorAll('[onclick*="answerSafety"]');
+            btns.forEach(b => {
+                b.style.background = 'white';
+                b.style.color = 'var(--text-dark)';
+                b.style.borderColor = 'var(--border)';
+            });
+            const selected = document.querySelector('[onclick="answerSafety(\'' + choice + '\')"]');
+            if (choice === 'b') {
+                selected.style.background = 'var(--green)';
+                selected.style.color = 'var(--navy)';
+                selected.style.borderColor = 'var(--green-dark)';
+                feedback.className = 'feedback show feedback-correct';
+                feedback.innerHTML = '<strong style="font-size:1.1em;">&#10003; Correct &#8212; Option B is the safest choice.</strong><ul style="margin-top:12px; padding-left:20px; line-height:2;"><li>The WiFi network StadiumWiFi_Free is unverified &#8212; logging in on it could expose your credentials to a rogue hotspot.</li><li>The new sign-in notification is a serious warning that someone may be targeting your account.</li><li>Switching to mobile data removes the network risk entirely. Logging in over your own mobile connection is safe.</li><li>After getting in, change your password and check your account activity.</li></ul>';
+            } else if (choice === 'a') {
+                selected.style.background = '#f44336';
+                selected.style.color = 'white';
+                selected.style.borderColor = '#c62828';
+                feedback.className = 'feedback show feedback-wrong';
+                feedback.innerHTML = '<strong>&#10007; This is the most dangerous option.</strong><p style="margin-top:10px; line-height:1.7;">Logging into your account on an unverified public WiFi &#8212; especially one suggested by a stranger &#8212; puts your credentials at serious risk. The new sign-in notification suggests someone may already be targeting your account. Time pressure is exactly the condition attackers rely on to make you skip safety checks.</p>';
+            } else if (choice === 'c') {
+                selected.style.background = '#f44336';
+                selected.style.color = 'white';
+                selected.style.borderColor = '#c62828';
+                feedback.className = 'feedback show feedback-wrong';
+                feedback.innerHTML = '<strong>&#10007; Ignoring the sign-in alert is a serious mistake.</strong><p style="margin-top:10px; line-height:1.7;">A new sign-in notification you did not initiate means someone else may be accessing your account right now. Ignoring it and trying another unverified network compounds the risk. Treat this notification as urgent and act on it immediately.</p>';
+            } else {
+                selected.style.background = 'var(--navy)';
+                selected.style.color = 'white';
+                selected.style.borderColor = 'var(--navy)';
+                feedback.className = 'feedback show feedback-wrong';
+                feedback.innerHTML = '<strong>&#10007; Not wrong, but not the best option.</strong><p style="margin-top:10px; line-height:1.7;">Going to the box office is a reasonable fallback if everything else fails, but it is not necessary here. You can solve this safely in seconds by switching to mobile data. Option B resolves the situation immediately and securely without any queue.</p>';
+            }
+        }
+
+        // ════════════════════════════════════════════════════════════
+        // INITIALISATION
+        // Runs immediately when the page loads.
+        // Calls loadModule('home') to render the homepage content
+        // into #main-content so the user sees the module cards.
+        // ════════════════════════════════════════════════════════════
         // Load home view on start
         loadModule('home');
     </script>
