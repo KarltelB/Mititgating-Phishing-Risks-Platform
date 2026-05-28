@@ -1214,7 +1214,7 @@ const modules = {
 
                 `,
                                 'staying-safe': `
-                    <!-- ── MODULE 4 HEADER ── -->
+                    
                     <div class="module-header">
                         <div class="icon">🛡️</div>
                         <div>
@@ -1223,7 +1223,7 @@ const modules = {
                         </div>
                     </div>
 
-                    <!-- ── SECTION 1: PUBLIC WIFI ── -->
+                    
                     <div class="lesson-content">
                         <h2>Public WiFi at Stadiums — What Really Happens</h2>
                         <div class="lesson-box">
@@ -1278,7 +1278,7 @@ const modules = {
 
                         </div>
 
-                        <!-- WiFi safety quick checklist -->
+                        
                         <div style="background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); border-radius: 14px; padding: 25px; color: white; margin-top: 10px;">
                             <h3 style="color: var(--green); margin-bottom: 18px;">📋 Stadium WiFi — Quick Safety Checklist</h3>
                             <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -1306,7 +1306,7 @@ const modules = {
                         </div>
                     </div>
 
-                    <!-- ── SECTION 2: SAFE TICKET BUYING ── -->
+                    
                     <div class="lesson-content">
                         <h2>Safe Ticket Buying — The Moment It Matters Most</h2>
                         <p style="color: var(--text-mid); margin-bottom: 25px; font-size: 1.05em;">Everything you've learned across this platform leads to this moment — when you're about to buy a ticket. Follow this checklist every single time.</p>
@@ -1356,7 +1356,7 @@ const modules = {
                         </div>
                     </div>
 
-                    <!-- ── SECTION 3: IF YOUVE BEEN SCAMMED ── -->
+                    
                     <div class="lesson-content">
                         <h2>If You've Been Scammed — What to Do Right Now</h2>
                         <p style="color: var(--text-mid); margin-bottom: 20px; font-size: 1.05em;">Discovering you've been scammed is stressful. Speed matters — the faster you act, the better your chances of limiting the damage or recovering your money. Follow these steps in order.</p>
@@ -1419,7 +1419,7 @@ const modules = {
                         </div>
                     </div>
 
-                    <!-- ── SECTION 4: EVERYDAY SECURITY HABITS ── -->
+                    
                     <div class="lesson-content">
                         <h2>Everyday Security Habits</h2>
                         <p style="color: var(--text-mid); margin-bottom: 25px; font-size: 1.05em;">These four habits take minutes to set up and significantly reduce your risk of being compromised — not just during matchday, but every day.</p>
@@ -1497,7 +1497,7 @@ const modules = {
                         </div>
                     </div>
 
-                    <!-- ── SECTION 5: INTERACTIVE EXERCISE ── -->
+                    
                     <div class="exercise">
                         <h3>🎯 Final Exercise: What Would You Do?</h3>
                         <p style="color: var(--navy); margin-bottom: 20px;">It's matchday. Read this scenario and choose the safest course of action.</p>
@@ -1636,6 +1636,27 @@ function answerExercise(exerciseId, answer) {
             `;
         }
 
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: loadQuiz()
+        // PURPOSE:  Builds and renders the full 12-question quiz
+        //           into the #moduleContent div.
+        // HOW IT WORKS:
+        //   1. Defines the quizData array — 12 question objects,
+        //      each with: id, question text, multipleAnswer flag,
+        //      and an options array (each option has text + correct)
+        //   2. Stores quizData in window.quizData so other functions
+        //      (submitQuiz, sendResultsEmail) can access it
+        //   3. Initialises window.quizAnswers as empty object to
+        //      track the user's selections as they answer
+        //   4. Generates HTML for each question using .map()
+        //      - Single answer questions use radio inputs
+        //      - Multiple answer questions use checkbox inputs
+        //   5. Injects the HTML into #quizQuestionsDiv
+        //   6. Calls updateSubmitButton() to set initial button state
+        // NOTE:
+        //   multipleAnswer: false = single correct answer (radio)
+        //   multipleAnswer: true  = multiple correct answers (checkbox)
+        // ════════════════════════════════════════════════════════════
         function loadQuiz() {
             const questions = [
                 {
@@ -1843,6 +1864,20 @@ function answerExercise(exerciseId, answer) {
             updateSubmitButton();
         }
 
+        // ════════════════════════════════════════════════════════════
+        // FUNCTION: updateSubmitButton()
+        // PURPOSE:  Enables or disables the Submit Quiz button
+        //           depending on whether all questions are answered.
+        // HOW IT WORKS:
+        //   1. Gets the submitBtn element from the DOM
+        //   2. Counts how many questions have been answered by
+        //      checking the length of window.quizAnswers object
+        //   3. Compares answered count to total questions
+        //   4. If all answered: enables the button (disabled = false)
+        //      If not all answered: keeps button disabled
+        // NOTE: Called after every selectQuizOption() to keep the
+        //       button state in sync with the user's progress
+        // ════════════════════════════════════════════════════════════
         function updateSubmitButton() {
             const submitBtn = document.getElementById('submitBtn');
             const answeredCount = Object.keys(window.quizAnswers).length;
