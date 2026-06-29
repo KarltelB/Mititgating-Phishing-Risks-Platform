@@ -1,6 +1,12 @@
-**Mitigating Phishing Risks in Stadium Fan Engagement Platforms**
+# 🛡️ Mitigating Phishing Risks in Stadium Fan Engagement Platforms
 
-**Overview**
+## 🌐 Live Demo
+
+**🔗 [Launch the Live Application](https://karltelb.github.io/Mitigating-Phishing-Risks-Platform/)**
+
+---
+
+## Overview
 
 This project was developed as part of my final-year BSc (Hons) Cyber Security degree at De Montfort University.
 
